@@ -25,8 +25,8 @@ class AuthController extends Controller
     public function registrar(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|between:2,100',
+            'name' => 'required|string|between:2,200',
+            'email' => 'required|string|email|between:2,200',
             'telefone' => 'required|string|min:14|max:15',
             'password' => 'required|string|confirmed|min:6',
             'password_confirmation' => 'required',

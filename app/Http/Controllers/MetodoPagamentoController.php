@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Status;
-use App\Repositories\StatusRepository;
+use App\Models\MetodoPagamento;
+use App\Repositories\MetodoPagamentoRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +12,10 @@ use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 
-class StatusController extends Controller
+class MetodoPagamentoController extends Controller
 {
-
-    public function __construct(Status $status){
-        $this->status = $status;
+    public function __construct(MetodoPagamento $metodoPagamento){
+        $this->metodoPagamento = $metodoPagamento;
     }
 
     /**
@@ -32,7 +30,7 @@ class StatusController extends Controller
             if($user->isRoot()) {
 
                 $validator = Validator::make($request->all(), [
-                    'nome' => 'required|string|between:5,50',
+                    'nome' => 'required|string|between:5,100',
                 ]);
 
                 if ($validator->fails()) {
@@ -40,9 +38,9 @@ class StatusController extends Controller
                 }
 
                 // Alterando os dados do usuario
-                $statusRepo = new StatusRepository($this->status);
+                $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 
-                $total = $statusRepo->verificarNomeExiste($request->nome);
+                $total = $repository->verificarNomeExiste($request->nome);
 
                 if($total > 0){
                     $retorno = ['type' => 'WARNING', 'mensagem' => 'Este registro já existe!'];
@@ -52,18 +50,18 @@ class StatusController extends Controller
                 $acao = 'cadastrado';
                 if($request->id){
 
-                    $status = $statusRepo->buscarPorId($request->id);
+                    $metodoPagamento = $repository->buscarPorId($request->id);
                     $acao = 'alterado';
 
                 } else {
-                    $status = new Status();
+                    $metodoPagamento = new MetodoPagamento();
                 }
 
-                $status->nome = $request->nome;
+                $metodoPagamento->nome = $request->nome;
 
-                $statusRepo->salvar($status);
+                $repository->salvar($metodoPagamento);
 
-                if($statusRepo === null){
+                if($repository === null){
                     $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível alterar o dado!'];
                     return response()->json($retorno, Response::HTTP_BAD_REQUEST);
                 } else {
@@ -85,19 +83,19 @@ class StatusController extends Controller
         }
     }
 
-    // Busca usuario por id - somente admin e root tem acesso
-    public function buscarStatus(int $idStatus){
+    // Busca metodoPagamento por id - somente admin e root tem acesso
+    public function buscarmetodoPagamento(int $idMetodoPagamento){
 
         $user = Auth::user();
 
         if($user->isRoot()) {
 
-            $statusRepo = new StatusRepository($this->status);
+            $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 
-            $status = $statusRepo->buscarPorId($idStatus);
+            $metodoPagamento = $repository->buscarPorId($idMetodoPagamento);
 
             $retorno = [
-                'status' => $status
+                'metodoPagamento' => $metodoPagamento
             ];
 
             return response()->json($retorno, 200);
@@ -115,9 +113,9 @@ class StatusController extends Controller
 
             if($user->isRoot()) {
 
-                $statusRepo = new StatusRepository($this->status);
+                $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 
-                $lista = $statusRepo->listarPagination($startRow, $limit, $sortBy, 'id');
+                $lista = $repository->listarPagination($startRow, $limit, $sortBy, 'id');
 
                 $retorno = ['lista' => $lista ];
                 return response()->json($retorno, Response::HTTP_OK);
@@ -143,9 +141,9 @@ class StatusController extends Controller
 
             if($user->isRoot()) {
 
-                $statusRepo = new StatusRepository($this->status);
+                $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 
-                $total = $statusRepo->listarTotalPagination();
+                $total = $repository->listarTotalPagination();
 
                 $retorno = [
                     'total' => $total
@@ -181,9 +179,9 @@ class StatusController extends Controller
 
             if($user->isRoot()) {
 
-                $statusRepo = new StatusRepository($this->status);
+                $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 
-                $statusRepo->excluir($request->id);
+                $repository->excluir($request->id);
 
                 return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
 
@@ -199,5 +197,4 @@ class StatusController extends Controller
 
 
     }
-
 }

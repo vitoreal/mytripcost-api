@@ -3,9 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\MetodoPagamentoController;
 use App\Http\Controllers\UsuarioController;
 
 /*
@@ -53,9 +55,30 @@ Route::prefix('usuario')->middleware('jwt.auth')->group(function() {
     Route::post('/excluir-usuario', [UsuarioController::class, 'excluir']);
 });
 
+// Endereco controller
 Route::prefix('endereco')->middleware('jwt.auth')->group(function() {
     Route::get('/lista-estado', [EnderecoController::class, 'listaEstado']);
     Route::get('/lista-cidade/{idEstado}', [EnderecoController::class, 'listaCidade']);
+});
+
+
+// Configuracao controller
+Route::prefix('config')->middleware('jwt.auth')->group(function() {
+
+    // Categoria
+    Route::get('/listar-categoria-total', [CategoriaController::class, 'listarTotalPagination']);
+    Route::get('/listar-categoria/{startRow}/{limit}/{sortBy}', [CategoriaController::class, 'listarPagination']);
+    Route::post('/salvar-categoria', [CategoriaController::class, 'salvar']);
+    Route::post('/excluir-categoria', [CategoriaController::class, 'excluir']);
+    Route::get('/buscar-categoria/{idCategoria}', [CategoriaController::class, 'buscarCategoria']);
+
+    // Metodos de Pagamento
+    Route::get('/listar-metodo-pagamento-total', [MetodoPagamentoController::class, 'listarTotalPagination']);
+    Route::get('/listar-metodo-pagamento/{startRow}/{limit}/{sortBy}', [MetodoPagamentoController::class, 'listarPagination']);
+    Route::post('/salvar-metodo-pagamento', [MetodoPagamentoController::class, 'salvar']);
+    Route::post('/excluir-metodo-pagamento', [MetodoPagamentoController::class, 'excluir']);
+    Route::get('/buscar-metodo-pagamento/{idMetodoPagamentpo}', [MetodoPagamentoController::class, 'buscarMetodoPagamento']);
+
 });
 
 // GOOGLE AUTH
