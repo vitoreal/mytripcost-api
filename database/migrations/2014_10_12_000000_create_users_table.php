@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('status_id')->references('id')->on('status');
             $table->string('email', 200)->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password', 20);
+            $table->string('password', 200);
             $table->string('google_id')->nullable();
             $table->string('google_token')->nullable();
             $table->string('google_refresh_token')->nullable();
