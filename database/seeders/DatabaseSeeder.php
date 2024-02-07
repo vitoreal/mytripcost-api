@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CidadeSeeder::class);
         $this->call(EnderecoSeeder::class);
         $this->call(PaisesSeeder::class);
+        $this->call(MoedaSeeder::class);
     }
 }

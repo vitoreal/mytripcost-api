@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paises', function (Blueprint $table) {
+        Schema::create('reportar_bugs', function (Blueprint $table) {
             $table->id();
-            $table->string('nome', 100);
-            $table->string('iso', 3);
-            $table->string('iso3', 3);
-            $table->string('dial', 10);
-            $table->string('moeda', 100)->nullable();
-            $table->string('nome_moeda', 100)->nullable();
-
+            $table->string('titulo', 200);
+            $table->text('descricao');
+            $table->binary('foto');
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paises');
+        Schema::dropIfExists('reportar_bugs');
     }
 };

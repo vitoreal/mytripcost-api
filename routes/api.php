@@ -8,6 +8,7 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MetodoPagamentoController;
+use App\Http\Controllers\ReportarBugController;
 use App\Http\Controllers\UsuarioController;
 
 /*
@@ -78,6 +79,13 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::post('/salvar-metodo-pagamento', [MetodoPagamentoController::class, 'salvar']);
     Route::post('/excluir-metodo-pagamento', [MetodoPagamentoController::class, 'excluir']);
     Route::get('/buscar-metodo-pagamento/{idMetodoPagamentpo}', [MetodoPagamentoController::class, 'buscarMetodoPagamento']);
+
+    // Reportar BUG
+    Route::get('/listar-reportar-bug-total', [ReportarBugController::class, 'listarTotalPagination']);
+    Route::get('/listar-reportar-bug/{startRow}/{limit}/{sortBy}', [ReportarBugController::class, 'listarPagination']);
+    Route::post('/salvar-reportar-bug', [ReportarBugController::class, 'salvar']);
+    Route::post('/excluir-reportar-bug', [ReportarBugController::class, 'excluir']);
+    Route::get('/buscar-reportar-bug/{idReportarBug}', [ReportarBugController::class, 'buscarReportarBug']);
 
 });
 

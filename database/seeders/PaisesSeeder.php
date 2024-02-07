@@ -13,7 +13,7 @@ class PaisesSeeder extends Seeder
      */
     public function run(): void
     {
-        $paisesSql = "INSERT INTO `paises` (`id`, `nome`, `iso`, `iso3`, `dial`, `currency`, `currency_name`) VALUES
+        $paisesSql = "INSERT INTO `paises` (`id`, `nome`, `iso`, `iso3`, `dial`, `moeda`, `nome_moeda`) VALUES
         (1, 'Afghanistan', 'AF', 'AFG', '93', 'AFN', 'Afghani'),
         (2, 'Albania', 'AL', 'ALB', '355', 'ALL', 'Lek'),
         (3, 'Algeria', 'DZ', 'DZA', '213', 'DZD', 'Algerian Dinar'),

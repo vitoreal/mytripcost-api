@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paises', function (Blueprint $table) {
+        Schema::create('fotos_viagem', function (Blueprint $table) {
             $table->id();
             $table->string('nome', 100);
-            $table->string('iso', 3);
-            $table->string('iso3', 3);
-            $table->string('dial', 10);
-            $table->string('moeda', 100)->nullable();
-            $table->string('nome_moeda', 100)->nullable();
-
+            $table->binary('arquivo');
+            $table->foreignId('id_viagem')->references('id')->on('viagem')->onDelete('cascade');
         });
     }
 
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paises');
+        Schema::dropIfExists('fotos_viagem');
     }
 };

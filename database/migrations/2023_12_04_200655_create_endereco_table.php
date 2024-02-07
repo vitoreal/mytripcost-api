@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('numero');
             $table->string('complemento')->nullable();
             $table->foreignId('id_cidade')->references('id')->on('cidade');
-            $table->foreignId('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');;
+            $table->foreignId('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
 
         });
     }
