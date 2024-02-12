@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
+use Illuminate\Support\Facades\Auth;
 use Throwable;
 
 class ReportarBugController extends Controller
@@ -44,9 +45,10 @@ class ReportarBugController extends Controller
             $reportarBug->descricao = $request->descricao;
             $reportarBug->user_id = $user->id;
 
-            $file = $request->foto;
-            $base64 = base64_encode($file);
-            $reportarBug->foto = $base64;
+            $file = $request->file('foto');
+            //$base64 = base64_encode($file);
+            //$reportarBug->foto = $base64;
+            $reportarBug->foto = $file;
 
             $repository->salvar($reportarBug);
 
@@ -54,16 +56,138 @@ class ReportarBugController extends Controller
                 $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível cadastrar o dado!'];
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             } else {
-
                 $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro cadastrado com sucesso!'];
-                return response()->json($file, Response::HTTP_OK);
+                return response()->json($retorno, Response::HTTP_OK);
             }
-
 
         } catch (UserNotDefinedException | Throwable $e ) {
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'Error' => $e->getMessage() ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }
+    }
+
+    // Busca metodoPagamento por id - somente admin e root tem acesso
+    public function buscarPorId(int $id){
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            if($user->isRoot()) {
+
+                $repository = new ReportarBugRepository($this->reportarBug);
+
+                $result = $repository->buscarPorId($id);
+
+                //$base64 = base64_decode($result->foto);
+                //$result->foto = $base64;
+
+                $retorno = [
+                    'result' => $result
+                ];
+
+                return response()->json($retorno, 200);
+            } else {
+                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
+                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+            }
+
+        } catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'Error' => $e->getMessage() ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+        }
+    }
+
+    public function listarPagination( string $startRow, string $limit, string $sortBy){
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            if($user->isRoot()) {
+
+                $repository = new ReportarBugRepository($this->reportarBug);
+
+                $lista = $repository->listarPagination($startRow, $limit, $sortBy, 'id');
+
+                $retorno = ['lista' => $lista ];
+                return response()->json($retorno, Response::HTTP_OK);
+
+            } else {
+                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
+                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+            }
+
+        } catch (UserNotDefinedException | UnauthorizedHttpException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+        }
+
+    }
+
+    public function listarTotalPagination(){
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            if($user->isRoot()) {
+
+                $repository = new ReportarBugRepository($this->reportarBug);
+
+                $total = $repository->listarTotalPagination();
+
+                $retorno = [
+                    'total' => $total
+                ];
+
+                return response()->json($retorno, Response::HTTP_OK);
+            } else {
+
+                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
+                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+            }
+
+        } catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+        }
+
+    }
+
+     /**
+     * Metodo para excluir
+     *
+     * @return response()
+     */
+    public function excluir(Request $request)
+    {
+
+        try {
+
+            $user = Auth::userOrFail();
+
+            if($user->isRoot()) {
+
+                $repository = new ReportarBugRepository($this->reportarBug);
+
+                $repository->excluir($request->id);
+
+                return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
+
+            } else {
+                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
+                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+            }
+
+        }  catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'Error' => $e->getMessage() ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+        }
+
+
     }
 }

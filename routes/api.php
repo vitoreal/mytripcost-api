@@ -42,7 +42,7 @@ Route::prefix('status')->middleware('jwt.auth')->group(function() {
     Route::get('/listar-status/{startRow}/{limit}/{sortBy}', [StatusController::class, 'listarPagination']);
     Route::post('/salvar-status', [StatusController::class, 'salvar']);
     Route::post('/excluir-status', [StatusController::class, 'excluir']);
-    Route::get('/buscar-status/{idStatus}', [StatusController::class, 'buscarStatus']);
+    Route::get('/buscar-status/{id}', [StatusController::class, 'buscarPorId']);
 });
 
 // USUARIO CONTROLLER
@@ -71,21 +71,21 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::get('/listar-categoria/{startRow}/{limit}/{sortBy}', [CategoriaController::class, 'listarPagination']);
     Route::post('/salvar-categoria', [CategoriaController::class, 'salvar']);
     Route::post('/excluir-categoria', [CategoriaController::class, 'excluir']);
-    Route::get('/buscar-categoria/{idCategoria}', [CategoriaController::class, 'buscarCategoria']);
+    Route::get('/buscar-categoria/{id}', [CategoriaController::class, 'buscarPorId']);
 
     // Metodos de Pagamento
     Route::get('/listar-metodo-pagamento-total', [MetodoPagamentoController::class, 'listarTotalPagination']);
     Route::get('/listar-metodo-pagamento/{startRow}/{limit}/{sortBy}', [MetodoPagamentoController::class, 'listarPagination']);
     Route::post('/salvar-metodo-pagamento', [MetodoPagamentoController::class, 'salvar']);
     Route::post('/excluir-metodo-pagamento', [MetodoPagamentoController::class, 'excluir']);
-    Route::get('/buscar-metodo-pagamento/{idMetodoPagamentpo}', [MetodoPagamentoController::class, 'buscarMetodoPagamento']);
+    Route::get('/buscar-metodo-pagamento/{id}', [MetodoPagamentoController::class, 'buscarPorId']);
 
     // Reportar BUG
     Route::get('/listar-reportar-bug-total', [ReportarBugController::class, 'listarTotalPagination']);
     Route::get('/listar-reportar-bug/{startRow}/{limit}/{sortBy}', [ReportarBugController::class, 'listarPagination']);
     Route::post('/salvar-reportar-bug', [ReportarBugController::class, 'salvar']);
     Route::post('/excluir-reportar-bug', [ReportarBugController::class, 'excluir']);
-    Route::get('/buscar-reportar-bug/{idReportarBug}', [ReportarBugController::class, 'buscarReportarBug']);
+    Route::get('/buscar-reportar-bug/{id}', [ReportarBugController::class, 'buscarPorId']);
 
 });
 

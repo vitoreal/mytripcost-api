@@ -23,5 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EnderecoSeeder::class);
         $this->call(PaisesSeeder::class);
         $this->call(MoedaSeeder::class);
+        $this->call(CategoriaSeeder::class);
+        $this->call(MetodoPagamentoSeeder::class);
     }
 }

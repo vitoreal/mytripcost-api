@@ -85,8 +85,8 @@ class StatusController extends Controller
         }
     }
 
-    // Busca usuario por id - somente admin e root tem acesso
-    public function buscarStatus(int $idStatus){
+    // Busca por id - somente admin e root tem acesso
+    public function buscarPorId(int $id){
 
         $user = Auth::user();
 
@@ -94,10 +94,10 @@ class StatusController extends Controller
 
             $statusRepo = new StatusRepository($this->status);
 
-            $status = $statusRepo->buscarPorId($idStatus);
+            $result = $statusRepo->buscarPorId($id);
 
             $retorno = [
-                'status' => $status
+                'result' => $result
             ];
 
             return response()->json($retorno, 200);

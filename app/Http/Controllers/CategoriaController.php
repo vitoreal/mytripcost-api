@@ -85,8 +85,8 @@ class CategoriaController extends Controller
         }
     }
 
-    // Busca categoria por id - somente admin e root tem acesso
-    public function buscarCategoria(int $idCategoria){
+    // Busca por id - somente admin e root tem acesso
+    public function buscarPorId(int $id){
 
         $user = Auth::user();
 
@@ -94,10 +94,10 @@ class CategoriaController extends Controller
 
             $repository = new CategoriaRepository($this->categoria);
 
-            $categoria = $repository->buscarPorId($idCategoria);
+            $result = $repository->buscarPorId($id);
 
             $retorno = [
-                'categoria' => $categoria
+                'result' => $result
             ];
 
             return response()->json($retorno, 200);

@@ -83,8 +83,8 @@ class MetodoPagamentoController extends Controller
         }
     }
 
-    // Busca metodoPagamento por id - somente admin e root tem acesso
-    public function buscarmetodoPagamento(int $idMetodoPagamento){
+    // Busca por id - somente admin e root tem acesso
+    public function buscarPorId(int $id){
 
         $user = Auth::user();
 
@@ -92,10 +92,10 @@ class MetodoPagamentoController extends Controller
 
             $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 
-            $metodoPagamento = $repository->buscarPorId($idMetodoPagamento);
+            $result = $repository->buscarPorId($id);
 
             $retorno = [
-                'metodoPagamento' => $metodoPagamento
+                'result' => $result
             ];
 
             return response()->json($retorno, 200);
