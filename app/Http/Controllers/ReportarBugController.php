@@ -45,13 +45,19 @@ class ReportarBugController extends Controller
             $reportarBug->descricao = $request->descricao;
             $reportarBug->user_id = $user->id;
 
-            $file = $request->file('foto');
+            //$file = $request->file('foto');
             //$base64 = base64_encode($file);
-            //$reportarBug->foto = $base64;
+            $file = base64_encode(file_get_contents($request->foto->path()));
             $reportarBug->foto = $file;
+            //$reportarBug->foto = $file;
 
             $repository->salvar($reportarBug);
-
+/*
+            $file_extension = $file->getClientOriginalName();
+            $destination_path = public_path() . '/folder/images/';
+            $filename = $file_extension;
+            $file->move($destination_path, $filename);
+*/
             if($repository === null){
                 $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível cadastrar o dado!'];
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
