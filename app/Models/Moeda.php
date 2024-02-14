@@ -8,4 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Moeda extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'moeda';
+
+    protected $fillable = [
+        'codigo',
+        'nome',
+    ];
+
 }

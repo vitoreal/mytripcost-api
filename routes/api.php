@@ -8,8 +8,10 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MetodoPagamentoController;
+use App\Http\Controllers\MoedaController;
 use App\Http\Controllers\ReportarBugController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\ViagemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +64,15 @@ Route::prefix('endereco')->middleware('jwt.auth')->group(function() {
     Route::get('/lista-cidade/{idEstado}', [EnderecoController::class, 'listaCidade']);
 });
 
+// VIAGEM CONTROLLER
+Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
+    Route::get('/listar-viagem-total', [ViagemController::class, 'listarTotalPagination']);
+    Route::get('/listar-viagem/{startRow}/{limit}/{sortBy}', [ViagemController::class, 'listarPagination']);
+    Route::post('/salvar-viagem', [ViagemController::class, 'salvar']);
+    Route::post('/excluir-viagem', [ViagemController::class, 'excluir']);
+    Route::get('/buscar-viagem/{id}', [ViagemController::class, 'buscarPorId']);
+});
+
 
 // Configuracao controller
 Route::prefix('config')->middleware('jwt.auth')->group(function() {
@@ -86,6 +97,9 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::post('/salvar-reportar-bug', [ReportarBugController::class, 'salvar']);
     Route::post('/excluir-reportar-bug', [ReportarBugController::class, 'excluir']);
     Route::get('/buscar-reportar-bug/{id}', [ReportarBugController::class, 'buscarPorId']);
+
+    // Moeda
+    Route::get('/listar-moeda', [MoedaController::class, 'listarMoeda']);
 
 });
 

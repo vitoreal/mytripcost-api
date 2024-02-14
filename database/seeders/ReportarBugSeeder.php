@@ -13,6 +13,6 @@ class ReportarBugSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement("ALTER TABLE reportar_bug ADD foto LONGBLOB");
+        DB::statement("ALTER TABLE reportar_bugs MODIFY COLUMN foto LONGBLOB");
     }
 }
