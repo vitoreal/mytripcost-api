@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Viagem;
 use App\Repositories\ViagemRepository;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
@@ -73,8 +74,8 @@ class ViagemController extends Controller
                 return response()->json($retorno, Response::HTTP_OK);
             }
 
-            dd($request->all());
-            exit;
+            //dd($request->all());
+            //exit;
 
             $acao = ['cadastrado', 'cadastrar'];
 
@@ -88,9 +89,14 @@ class ViagemController extends Controller
             }
 
             $viagem->nome = $request->nome;
+            $viagem->privado = $request->privado;
             $viagem->data_inicio = $request->dataInicio;
             $viagem->data_fim = $request->dataFim;
-            $viagem->orcamento = $request->orcamento;
+
+            $orcamento = str_replace('.','', $request->orcamento);
+            $orcamento = str_replace(',','.', $orcamento);
+
+            $viagem->orcamento = $orcamento;
             $viagem->descricao = $request->descricao;
 
             if($request->foto){
@@ -113,7 +119,7 @@ class ViagemController extends Controller
 
 
 
-        } catch (UserNotDefinedException $e ) {
+        } catch (UserNotDefinedException | QueryException $e ) {
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 

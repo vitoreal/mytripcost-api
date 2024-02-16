@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriaSeeder::class);
         $this->call(MetodoPagamentoSeeder::class);
         $this->call(ReportarBugSeeder::class);
+        $this->call(ViagemSeeder::class);
 
     }
 }
