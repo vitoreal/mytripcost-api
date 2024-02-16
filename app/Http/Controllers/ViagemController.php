@@ -32,8 +32,8 @@ class ViagemController extends Controller
                 'nome' => 'required|string|max:100',
                 'descricao' => 'string|max:1000',
                 'orcamento' => 'required',
-                'dataInicio' => 'required|date_format:d/m/Y',
-                'dataFim' => 'required|date_format:d/m/Y|after:dataInicio',
+                'dataInicio' => 'required|date_format:Y-m-d',
+                'dataFim' => 'required|date_format:Y-m-d|after:dataInicio',
             ];
 
             $messages = [
@@ -63,40 +63,51 @@ class ViagemController extends Controller
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             }
 
-            dd($request->all());
-            exit;
-
             // Alterando os dados do usuario
             $repository = new ViagemRepository($this->viagem);
 
             $total = $repository->verificarNomeExiste($request->nome);
 
             if($total > 0){
-                $retorno = ['type' => 'WARNING', 'mensagem' => 'Este registro já existe!'];
+                $retorno = ['type' => 'WARNING', 'mensagem' => 'Já existe uma viagem com esse nome!'];
                 return response()->json($retorno, Response::HTTP_OK);
             }
 
-            $acao = 'cadastrado';
+            dd($request->all());
+            exit;
+
+            $acao = ['cadastrado', 'cadastrar'];
+
             if($request->id){
 
-                $categoria = $repository->buscarPorId($request->id);
-                $acao = 'alterado';
+                $viagem = $repository->buscarPorId($request->id);
+                $acao = ['alterado', 'alterar'];
 
             } else {
                 $viagem = new Viagem();
             }
 
             $viagem->nome = $request->nome;
+            $viagem->data_inicio = $request->dataInicio;
+            $viagem->data_fim = $request->dataFim;
+            $viagem->orcamento = $request->orcamento;
+            $viagem->descricao = $request->descricao;
+
+            if($request->foto){
+                $file = base64_encode(file_get_contents($request->foto->path()));
+                $viagem->foto = $file;
+            }
+            $viagem->id_moeda = $request->moeda;
             $viagem->user_id = $user->id;
 
-            $repository->salvar($categoria);
+            $repository->salvar($viagem);
 
             if($repository === null){
-                $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível alterar o dado!'];
+                $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível '.$acao[1].' o dado!'];
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             } else {
 
-                $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro '.$acao.' com sucesso!'];
+                $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro '.$acao[0].' com sucesso!'];
                 return response()->json($retorno, Response::HTTP_OK);
             }
 

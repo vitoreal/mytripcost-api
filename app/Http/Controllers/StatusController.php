@@ -49,11 +49,12 @@ class StatusController extends Controller
                     return response()->json($retorno, Response::HTTP_OK);
                 }
 
-                $acao = 'cadastrado';
+                $acao = ['cadastrado', 'cadastrar'];
+
                 if($request->id){
 
                     $status = $statusRepo->buscarPorId($request->id);
-                    $acao = 'alterado';
+                    $acao = ['alterado', 'alterar'];
 
                 } else {
                     $status = new Status();
@@ -64,11 +65,11 @@ class StatusController extends Controller
                 $statusRepo->salvar($status);
 
                 if($statusRepo === null){
-                    $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível alterar o dado!'];
+                    $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível '.$acao[1].' o dado!'];
                     return response()->json($retorno, Response::HTTP_BAD_REQUEST);
                 } else {
 
-                    $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro '.$acao.' com sucesso!'];
+                    $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro '.$acao[0].' com sucesso!'];
                     return response()->json($retorno, Response::HTTP_OK);
                 }
 

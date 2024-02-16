@@ -49,11 +49,12 @@ class CategoriaController extends Controller
                     return response()->json($retorno, Response::HTTP_OK);
                 }
 
-                $acao = 'cadastrado';
+                $acao = ['cadastrado', 'cadastrar'];
+
                 if($request->id){
 
                     $categoria = $repository->buscarPorId($request->id);
-                    $acao = 'alterado';
+                    $acao = ['alterado', 'alterar'];
 
                 } else {
                     $categoria = new Categoria();
@@ -64,11 +65,11 @@ class CategoriaController extends Controller
                 $repository->salvar($categoria);
 
                 if($repository === null){
-                    $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível alterar o dado!'];
+                    $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível '.$acao[1].' o dado!'];
                     return response()->json($retorno, Response::HTTP_BAD_REQUEST);
                 } else {
 
-                    $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro '.$acao.' com sucesso!'];
+                    $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro '.$acao[0].' com sucesso!'];
                     return response()->json($retorno, Response::HTTP_OK);
                 }
 
