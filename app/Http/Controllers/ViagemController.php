@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Viagem;
+use App\Repositories\ViagemRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
@@ -25,13 +26,45 @@ class ViagemController extends Controller
 
             $user = auth()->userOrFail();
 
-            $validator = Validator::make($request->all(), [
-                'nome' => 'required|string|between:5,100',
-            ]);
+            $rules = [
+                'moeda' => 'required',
+                'privado' => 'required',
+                'nome' => 'required|string|max:100',
+                'descricao' => 'string|max:1000',
+                'orcamento' => 'required',
+                'dataInicio' => 'required|date_format:d/m/Y',
+                'dataFim' => 'required|date_format:d/m/Y|after:dataInicio',
+            ];
+
+            $messages = [
+                'moeda.required' => 'Campo moeda é o obrigatório',
+                'privado.required' => 'Campo privado é o obrigatório',
+                'nome.required' => 'Campo nome é o obrigatório',
+                'nome.max' => 'Campo nome não pode ultrapassar de 100 caracteres',
+                'descricao.max' => 'Campo descrição não pode ultrapassar de 1000 caracteres',
+                'orcamento.required' => 'Campo orçamento é o obrigatório',
+                'dataInicio.date_format' => 'Formato de data inválido',
+                'dataInicio.required' => 'Campo data início é o obrigatório',
+                'dataFim.date_format' => 'Formato de data inválido',
+                'dataFim.required' => 'Formato de data inválido',
+                'dataFim.after' => 'O campo data fim tem que ser maior que a da data início',
+            ];
+
+            $validator = Validator::make($request->all(), $rules, $messages);
 
             if ($validator->fails()) {
-                return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível validar os campos!'], Response::HTTP_BAD_REQUEST);
+
+                $errors = $validator->errors();
+
+                $retorno = [
+                            'type' => 'ERROR',
+                            'mensagem' => $errors->all()[0],
+                            ];
+                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             }
+
+            dd($request->all());
+            exit;
 
             // Alterando os dados do usuario
             $repository = new ViagemRepository($this->viagem);
@@ -50,10 +83,11 @@ class ViagemController extends Controller
                 $acao = 'alterado';
 
             } else {
-                $categoria = new Categoria();
+                $viagem = new Viagem();
             }
 
-            $categoria->nome = $request->nome;
+            $viagem->nome = $request->nome;
+            $viagem->user_id = $user->id;
 
             $repository->salvar($categoria);
 
@@ -68,8 +102,8 @@ class ViagemController extends Controller
 
 
 
-        } catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
+        } catch (UserNotDefinedException $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }

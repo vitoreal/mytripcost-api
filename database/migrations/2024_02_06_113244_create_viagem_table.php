@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('viagem', function (Blueprint $table) {
             $table->id();
-            $table->string('nome', 200);
+            $table->string('nome', 100);
             $table->date('data_inicio');
             $table->date('data_fim');
             $table->decimal('orcamento');
-            $table->string('descricao', 500);
-            $table->binary('foto');
+            $table->string('descricao', 1000)->nullable();
+            $table->binary('foto')->nullable();
             $table->boolean('privado');
             $table->foreignId('id_moeda')->references('id')->on('moeda');
             $table->foreignId('user_id')->references('id')->on('users');
