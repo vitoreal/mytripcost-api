@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
@@ -67,7 +68,13 @@ class ViagemController extends Controller
             // Alterando os dados do usuario
             $repository = new ViagemRepository($this->viagem);
 
-            $total = $repository->verificarNomeExiste($request->nome);
+            $idViagem = 0;
+
+            if($request->id){
+                $idViagem = $request->id;
+            }
+
+            $total = $repository->verificarNomeExiste($request->nome, $user->id, $idViagem);
 
             if($total > 0){
                 $retorno = ['type' => 'WARNING', 'mensagem' => 'Já existe uma viagem com esse nome!'];
@@ -83,6 +90,12 @@ class ViagemController extends Controller
 
                 $viagem = $repository->buscarPorId($request->id);
                 $acao = ['alterado', 'alterar'];
+
+                if($request->foto){
+                    //$file = base64_encode(file_get_contents($request->foto->path()));
+                    Storage::delete($viagem->foto);
+
+                }
 
             } else {
                 $viagem = new Viagem();
@@ -100,9 +113,15 @@ class ViagemController extends Controller
             $viagem->descricao = $request->descricao;
 
             if($request->foto){
-                $file = base64_encode(file_get_contents($request->foto->path()));
-                $viagem->foto = $file;
+                //$file = base64_encode(file_get_contents($request->foto->path()));
+
+                $path = $request->file('foto')->store(
+                    'images/foto-viagem/'.$user->id
+                );
+
+                $viagem->foto = $path;
             }
+
             $viagem->id_moeda = $request->moeda;
             $viagem->user_id = $user->id;
 
@@ -120,7 +139,7 @@ class ViagemController extends Controller
 
 
         } catch (UserNotDefinedException | QueryException $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage()];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }
@@ -143,7 +162,7 @@ class ViagemController extends Controller
 
             return response()->json($retorno, 200);
         } else {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!'];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
     }
@@ -154,22 +173,28 @@ class ViagemController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            $repository = new ViagemRepository($this->viagem);
 
-                $repository = new ViagemRepository($this->viagem);
-
+            if($user->isRoot() || $user->isAdmin()) {
                 $lista = $repository->listarPagination($startRow, $limit, $sortBy, 'id');
-
-                $retorno = ['lista' => $lista ];
-                return response()->json($retorno, Response::HTTP_OK);
-
             } else {
-                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
-                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+                $lista = $repository->listarPaginationViagem($startRow, $limit, $sortBy, 'id', $user->id);
             }
 
+            foreach ($lista as $key => $value) {
+
+                $lista[$key]->orcamento = number_format($value->orcamento,2,",",".");;
+                $lista[$key]->data_inicio = date("d/m/Y", strtotime($value->data_inicio));
+                $lista[$key]->data_fim = date("d/m/Y", strtotime($value->data_fim));
+
+
+            }
+
+            $retorno = ['lista' => $lista ];
+            return response()->json($retorno, Response::HTTP_OK);
+
         } catch (UserNotDefinedException | UnauthorizedHttpException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }
@@ -182,25 +207,25 @@ class ViagemController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            $repository = new ViagemRepository($this->viagem);
 
-                $repository = new ViagemRepository($this->viagem);
-
+            if($user->isRoot() || $user->isAdmin()) {
                 $total = $repository->listarTotalPagination();
-
-                $retorno = [
-                    'total' => $total
-                ];
-
-                return response()->json($retorno, Response::HTTP_OK);
             } else {
+                $total = $repository->listarTotalPaginationViagem($user->id);
 
-                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
-                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             }
 
+
+            $retorno = [
+                'total' => $total
+            ];
+
+            return response()->json($retorno, Response::HTTP_OK);
+
+
         } catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
 

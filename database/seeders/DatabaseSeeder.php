@@ -25,8 +25,8 @@ class DatabaseSeeder extends Seeder
         $this->call(MoedaSeeder::class);
         $this->call(CategoriaSeeder::class);
         $this->call(MetodoPagamentoSeeder::class);
-        $this->call(ReportarBugSeeder::class);
-        $this->call(ViagemSeeder::class);
+        //$this->call(ReportarBugSeeder::class);
+        //$this->call(ViagemSeeder::class);
 
     }
 }

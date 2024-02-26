@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('data_fim');
             $table->decimal('orcamento');
             $table->string('descricao', 1000)->nullable();
-            $table->binary('foto')->nullable();
+            $table->string('foto', 200)->nullable();
             $table->boolean('privado');
             $table->foreignId('id_moeda')->references('id')->on('moeda');
             $table->foreignId('user_id')->references('id')->on('users');

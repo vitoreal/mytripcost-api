@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titulo', 200);
             $table->text('descricao');
-            $table->binary('foto');
+            $table->string('foto', 200);
             $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamps();
         });

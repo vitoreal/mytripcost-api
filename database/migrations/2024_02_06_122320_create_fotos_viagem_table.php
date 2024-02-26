@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('fotos_viagem', function (Blueprint $table) {
             $table->id();
             $table->string('nome', 100);
-            $table->binary('arquivo');
+            $table->string('arquivo', 200);
             $table->foreignId('id_viagem')->references('id')->on('viagem')->onDelete('cascade');
         });
     }

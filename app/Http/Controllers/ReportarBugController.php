@@ -45,11 +45,15 @@ class ReportarBugController extends Controller
             $reportarBug->descricao = $request->descricao;
             $reportarBug->user_id = $user->id;
 
-            //$file = $request->file('foto');
-            //$base64 = base64_encode($file);
-            $file = base64_encode(file_get_contents($request->foto->path()));
-            $reportarBug->foto = $file;
-            //$reportarBug->foto = $file;
+            if($request->foto){
+                //$file = base64_encode(file_get_contents($request->foto->path()));
+
+                $path = $request->file('foto')->store(
+                    'images/foto-reportar-bug/'.$user->id
+                );
+
+                $reportarBug->foto = $path;
+            }
 
             $repository->salvar($reportarBug);
 /*
