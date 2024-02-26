@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Viagem;
 use App\Repositories\ViagemRepository;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +15,10 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 class ViagemController extends Controller
 {
-    public function __construct(Viagem $viagem){
+
+    public function __construct(Viagem $viagem, string $diretorio = 'images/foto-viagem/'){
         $this->viagem = $viagem;
+        $this->diretorio = $diretorio;
     }
 
     /**
@@ -92,9 +94,7 @@ class ViagemController extends Controller
                 $acao = ['alterado', 'alterar'];
 
                 if($request->foto){
-                    //$file = base64_encode(file_get_contents($request->foto->path()));
                     Storage::delete($viagem->foto);
-
                 }
 
             } else {
@@ -116,7 +116,7 @@ class ViagemController extends Controller
                 //$file = base64_encode(file_get_contents($request->foto->path()));
 
                 $path = $request->file('foto')->store(
-                    'images/foto-viagem/'.$user->id
+                    $this->diretorio.'/'.$user->id
                 );
 
                 $viagem->foto = $path;
@@ -148,9 +148,9 @@ class ViagemController extends Controller
     // Busca por id - somente admin e root tem acesso
     public function buscarPorId(int $id){
 
-        $user = Auth::user();
+        try {
 
-        if($user->isRoot()) {
+            $user = auth()->userOrFail();
 
             $repository = new ViagemRepository($this->viagem);
 
@@ -161,8 +161,9 @@ class ViagemController extends Controller
             ];
 
             return response()->json($retorno, 200);
-        } else {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!'];
+
+        }  catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
     }
@@ -216,7 +217,6 @@ class ViagemController extends Controller
 
             }
 
-
             $retorno = [
                 'total' => $total
             ];
@@ -245,24 +245,44 @@ class ViagemController extends Controller
 
             $user = Auth::userOrFail();
 
-            if($user->isRoot()) {
+            $repository = new ViagemRepository($this->viagem);
 
-                $repository = new ViagemRepository($this->viagem);
+            $idViagem = $request->id;
 
-                $repository->excluir($request->id);
+            if($user->isRoot() || $user->isAdmin()) {
+                $viagem = $repository->buscarPorId($idViagem);
+            } else {
+                $viagem = $repository->buscarViagemPorUser($user->id, $idViagem);
+
+            }
+
+            if($viagem){
+
+                if($viagem->foto != ''){
+                    Storage::delete($viagem->foto);
+
+                    $diretorio = $this->diretorio.'/'.$user->id;
+
+                    $files = Storage::allFiles($diretorio);
+
+                    if(count($files) == 0){
+                        Storage::deleteDirectory($diretorio);
+                    }
+
+                }
+
+                $repository->excluir($idViagem);
 
                 return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
 
-            } else {
-                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
-                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             }
 
+            return response()->json(['type' => 'ERROR', 'mensagem' => 'Você não tem permissão para deletar esse registro!'], Response::HTTP_BAD_REQUEST);
+
         }  catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
-
 
     }
 

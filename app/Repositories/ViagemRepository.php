@@ -6,18 +6,19 @@ use App\Models\Viagem;
 
 class ViagemRepository extends AbstractRepository {
 
-    public function __construct(Viagem $viagem){
-        $this->viagem = $viagem;
+    public function buscarViagemPorUser($idUser, $idViagem){
+        $this->model = $this->model->where([['user_id', '=', $idUser], ['id', '=', $idViagem]])->first();
+        return $this->model;
     }
 
     public function verificarNomeExiste($nome, $idUser, $idViagem){
-        $total= $this->viagem->where([['nome', '=', $nome], ['user_id', '=', $idUser], ['id', '!=', $idViagem]])->count();
+        $total= $this->model->where([['nome', '=', $nome], ['user_id', '=', $idUser], ['id', '!=', $idViagem]])->count();
         return $total;
     }
 
     public function listarTotalPaginationViagem($userId){
 
-        $total = $this->viagem->where('user_id','=', $userId)->count();
+        $total = $this->model->where('user_id','=', $userId)->count();
 
         return  $total;
 
@@ -35,9 +36,9 @@ class ViagemRepository extends AbstractRepository {
             $limit = 10;
         }
 
-        $this->viagem = $this->viagem->where('user_id','=', $userId)->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+        $this->model = $this->model->where('user_id','=', $userId)->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
 
-        return $this->viagem;
+        return $this->model;
 
     }
 
