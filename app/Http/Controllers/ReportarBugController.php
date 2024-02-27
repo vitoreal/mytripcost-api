@@ -9,12 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class ReportarBugController extends Controller
 {
-    public function __construct(ReportarBug $reportarBug){
+    public function __construct(ReportarBug $reportarBug, string $diretorio = 'images/foto-reportar-bug/'){
         $this->reportarBug = $reportarBug;
+        $this->diretorio = $diretorio;
     }
 
     /**
@@ -49,7 +51,7 @@ class ReportarBugController extends Controller
                 //$file = base64_encode(file_get_contents($request->foto->path()));
 
                 $path = $request->file('foto')->store(
-                    'images/foto-reportar-bug/'.$user->id
+                    $this->diretorio.$user->id
                 );
 
                 $reportarBug->foto = $path;
@@ -90,8 +92,10 @@ class ReportarBugController extends Controller
 
                 $result = $repository->buscarPorId($id);
 
-                //$base64 = base64_decode($result->foto);
-                //$result->foto = $base64;
+                $files = Storage::get($result->foto);
+
+                $base64 = base64_encode($files);
+                $result->foto = $base64;
 
                 $retorno = [
                     'result' => $result
@@ -180,9 +184,24 @@ class ReportarBugController extends Controller
 
             $user = Auth::userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isRoot() || $user->isAdmin()) {
 
                 $repository = new ReportarBugRepository($this->reportarBug);
+
+                $reportarBug = $repository->buscarPorId($request->id);
+
+                if($reportarBug->foto != ''){
+                    Storage::delete($reportarBug->foto);
+
+                    $diretorio = $this->diretorio.'/'.$user->id;
+
+                    $files = Storage::allFiles($diretorio);
+
+                    if(count($files) == 0){
+                        Storage::deleteDirectory($diretorio);
+                    }
+
+                }
 
                 $repository->excluir($request->id);
 

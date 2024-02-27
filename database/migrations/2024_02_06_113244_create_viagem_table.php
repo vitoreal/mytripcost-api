@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nome', 100);
             $table->date('data_inicio');
             $table->date('data_fim');
-            $table->decimal('orcamento');
+            $table->decimal('orcamento', 10, 2);
             $table->string('descricao', 1000)->nullable();
             $table->string('foto', 200)->nullable();
             $table->boolean('privado');

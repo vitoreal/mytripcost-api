@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,6 +22,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'telefone',
         'status_id',
+        'planos_id',
         'google_id',
         'google_token',
         'google_refresh_token',
@@ -71,6 +71,14 @@ class User extends Authenticatable implements JWTSubject
     public function status()
     {
         return $this->belongsTo(Status::class);
+    }
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function planos()
+    {
+        return $this->belongsTo(Planos::class);
     }
 
     /**

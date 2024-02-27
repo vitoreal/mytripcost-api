@@ -156,6 +156,11 @@ class ViagemController extends Controller
 
             $result = $repository->buscarPorId($id);
 
+            $files = Storage::get($result->foto);
+
+            $base64 = base64_encode($files);
+            $result->foto = $base64;
+
             $retorno = [
                 'result' => $result
             ];

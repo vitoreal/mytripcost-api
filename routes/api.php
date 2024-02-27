@@ -4,11 +4,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MetodoPagamentoController;
 use App\Http\Controllers\MoedaController;
+use App\Http\Controllers\PlanosController;
 use App\Http\Controllers\ReportarBugController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ViagemController;
@@ -71,11 +73,30 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
     Route::post('/salvar-viagem', [ViagemController::class, 'salvar']);
     Route::post('/excluir-viagem', [ViagemController::class, 'excluir']);
     Route::get('/buscar-viagem/{id}', [ViagemController::class, 'buscarPorId']);
+    Route::get('/foto-viagem/{id}', [ViagemController::class, 'listarFotoViagem']);
+    Route::get('/salvar-foto-viagem/{id}', [ViagemController::class, 'salvarFotoViagem']);
+    Route::get('/excluir-foto-viagem/{id}', [ViagemController::class, 'excluirFotoViagem']);
+});
+
+// VIAGEM CONTROLLER
+Route::prefix('despesa')->middleware('jwt.auth')->group(function() {
+    Route::get('/listar-despesa-total', [DespesaController::class, 'listarTotalPagination']);
+    Route::get('/listar-despesa/{startRow}/{limit}/{sortBy}', [DespesaController::class, 'listarPagination']);
+    Route::post('/salvar-despesa', [DespesaController::class, 'salvar']);
+    Route::post('/excluir-despesa', [DespesaController::class, 'excluir']);
+    Route::get('/buscar-despesa/{id}', [DespesaController::class, 'buscarPorId']);
 });
 
 
 // Configuracao controller
 Route::prefix('config')->middleware('jwt.auth')->group(function() {
+
+    // Planos
+    Route::get('/listar-planos-total', [PlanosController::class, 'listarTotalPagination']);
+    Route::get('/listar-planos/{startRow}/{limit}/{sortBy}', [PlanosController::class, 'listarPagination']);
+    Route::post('/salvar-planos', [PlanosController::class, 'salvar']);
+    Route::post('/excluir-planos', [PlanosController::class, 'excluir']);
+    Route::get('/buscar-planos/{id}', [PlanosController::class, 'buscarPorId']);
 
     // Categoria
     Route::get('/listar-categoria-total', [CategoriaController::class, 'listarTotalPagination']);

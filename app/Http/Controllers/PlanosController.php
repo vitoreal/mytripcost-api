@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Status;
-use App\Repositories\StatusRepository;
+use App\Models\Planos;
+use App\Repositories\PlanosRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
@@ -12,14 +12,13 @@ use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 
-class StatusController extends Controller
+class PlanosController extends Controller
 {
-
-    public function __construct(Status $status){
-        $this->status = $status;
+    public function __construct(Planos $planos){
+        $this->planos = $planos;
     }
 
-    /**
+     /**
      * Alterar dados do usuario
      */
     public function salvar(Request $request){
@@ -31,7 +30,7 @@ class StatusController extends Controller
             if($user->isRoot()) {
 
                 $validator = Validator::make($request->all(), [
-                    'nome' => 'required|string|between:5,50',
+                    'nome' => 'required|string|between:5,100',
                 ]);
 
                 if ($validator->fails()) {
@@ -39,9 +38,9 @@ class StatusController extends Controller
                 }
 
                 // Alterando os dados do usuario
-                $statusRepo = new StatusRepository($this->status);
+                $repository = new PlanosRepository($this->planos);
 
-                $total = $statusRepo->verificarNomeExiste($request->nome);
+                $total = $repository->verificarNomeExiste($request->nome);
 
                 if($total > 0){
                     $retorno = ['type' => 'WARNING', 'mensagem' => 'Este registro já existe!'];
@@ -52,18 +51,18 @@ class StatusController extends Controller
 
                 if($request->id){
 
-                    $status = $statusRepo->buscarPorId($request->id);
+                    $planos = $repository->buscarPorId($request->id);
                     $acao = ['alterado', 'alterar'];
 
                 } else {
-                    $status = new Status();
+                    $planos = new Planos();
                 }
 
-                $status->nome = $request->nome;
+                $planos->nome = $request->nome;
 
-                $statusRepo->salvar($status);
+                $repository->salvar($planos);
 
-                if($statusRepo === null){
+                if($repository === null){
                     $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível '.$acao[1].' o dado!'];
                     return response()->json($retorno, Response::HTTP_BAD_REQUEST);
                 } else {
@@ -92,9 +91,9 @@ class StatusController extends Controller
 
         if($user->isRoot()) {
 
-            $statusRepo = new StatusRepository($this->status);
+            $repository = new PlanosRepository($this->planos);
 
-            $result = $statusRepo->buscarPorId($id);
+            $result = $repository->buscarPorId($id);
 
             $retorno = [
                 'result' => $result
@@ -110,14 +109,13 @@ class StatusController extends Controller
     public function listarPagination( string $startRow, string $limit, string $sortBy){
 
         try {
-
             $user = auth()->userOrFail();
 
             if($user->isRoot()) {
 
-                $statusRepo = new StatusRepository($this->status);
+                $repository = new PlanosRepository($this->planos);
 
-                $lista = $statusRepo->listarPagination($startRow, $limit, $sortBy, 'id');
+                $lista = $repository->listarPagination($startRow, $limit, $sortBy, 'id');
 
                 $retorno = ['lista' => $lista ];
                 return response()->json($retorno, Response::HTTP_OK);
@@ -143,9 +141,9 @@ class StatusController extends Controller
 
             if($user->isRoot()) {
 
-                $statusRepo = new StatusRepository($this->status);
+                $repository = new PlanosRepository($this->planos);
 
-                $total = $statusRepo->listarTotalPagination();
+                $total = $repository->listarTotalPagination();
 
                 $retorno = [
                     'total' => $total
@@ -181,9 +179,9 @@ class StatusController extends Controller
 
             if($user->isRoot()) {
 
-                $statusRepo = new StatusRepository($this->status);
+                $repository = new PlanosRepository($this->planos);
 
-                $statusRepo->excluir($request->id);
+                $repository->excluir($request->id);
 
                 return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
 
@@ -199,5 +197,4 @@ class StatusController extends Controller
 
 
     }
-
 }
