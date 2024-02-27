@@ -18,12 +18,6 @@ class EnderecoSeeder extends Seeder
             ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 4 ],
             ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 5 ],
             ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 6 ],
-            ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 7 ],
-            ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 8 ],
-            ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 9 ],
-            ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 10 ],
-            ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 11 ],
-            ['cep' => '22230-001', 'bairro' => 'Flamengo', 'endereco' => 'Rua Senador Vergueiro', 'numero' => '56', 'complemento' => 'apt 103', 'id_cidade' => 3658, 'user_id' => 12 ],
           );
 
         DB::table('endereco')->insert($endereco);

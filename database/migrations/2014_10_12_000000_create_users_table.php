@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name', 200);
             $table->string('telefone', 20);
             $table->foreignId('status_id')->references('id')->on('status');
-            $table->foreignId('planos_id')->references('id')->on('planos');
             $table->string('email', 200)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 200);

@@ -88,7 +88,7 @@ class MetodoPagamentoController extends Controller
 
         $user = Auth::user();
 
-        if($user->isRoot()) {
+        if($user->isAdmin()) {
 
             $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 
@@ -111,7 +111,7 @@ class MetodoPagamentoController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 
@@ -139,7 +139,7 @@ class MetodoPagamentoController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $repository = new MetodoPagamentoRepository($this->metodoPagamento);
 

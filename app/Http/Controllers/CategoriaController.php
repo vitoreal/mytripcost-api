@@ -91,7 +91,7 @@ class CategoriaController extends Controller
 
         $user = Auth::user();
 
-        if($user->isRoot()) {
+        if($user->isAdmin()) {
 
             $repository = new CategoriaRepository($this->categoria);
 
@@ -114,7 +114,7 @@ class CategoriaController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $repository = new CategoriaRepository($this->categoria);
 
@@ -142,7 +142,7 @@ class CategoriaController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $repository = new CategoriaRepository($this->categoria);
 

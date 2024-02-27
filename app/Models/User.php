@@ -22,7 +22,6 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'telefone',
         'status_id',
-        'planos_id',
         'google_id',
         'google_token',
         'google_refresh_token',
@@ -74,14 +73,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * The roles that belong to the user.
-     */
-    public function planos()
-    {
-        return $this->belongsTo(Planos::class);
-    }
-
-    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
@@ -110,7 +101,7 @@ class User extends Authenticatable implements JWTSubject
 
         foreach ($this->roles()->get() as $role)
         {
-            if ($role->name == 'ADMIN')
+            if ($role->name == 'ROOT' || $role->name == 'ADMIN')
             {
                 return true;
             }
@@ -132,11 +123,11 @@ class User extends Authenticatable implements JWTSubject
         return false;
     }
 
-    public function isPadrao() {
+    public function isBasico() {
 
         foreach ($this->roles()->get() as $role)
         {
-            if ($role->name == 'PADRAO')
+            if ($role->name == 'ROOT' || $role->name == 'ADMIN' || $role->name == 'BASICO')
             {
                 return true;
             }
@@ -144,4 +135,18 @@ class User extends Authenticatable implements JWTSubject
 
         return false;
     }
+
+    public function isAvancado() {
+
+        foreach ($this->roles()->get() as $role)
+        {
+            if ($role->name == 'ROOT' || $role->name == 'ADMIN' || $role->name == 'AVANCADO')
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

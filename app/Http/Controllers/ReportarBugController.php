@@ -86,7 +86,7 @@ class ReportarBugController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $repository = new ReportarBugRepository($this->reportarBug);
 
@@ -120,7 +120,7 @@ class ReportarBugController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $repository = new ReportarBugRepository($this->reportarBug);
 
@@ -148,7 +148,7 @@ class ReportarBugController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $repository = new ReportarBugRepository($this->reportarBug);
 
@@ -184,7 +184,7 @@ class ReportarBugController extends Controller
 
             $user = Auth::userOrFail();
 
-            if($user->isRoot() || $user->isAdmin()) {
+            if($user->isAdmin()) {
 
                 $repository = new ReportarBugRepository($this->reportarBug);
 

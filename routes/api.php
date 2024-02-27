@@ -91,13 +91,6 @@ Route::prefix('despesa')->middleware('jwt.auth')->group(function() {
 // Configuracao controller
 Route::prefix('config')->middleware('jwt.auth')->group(function() {
 
-    // Planos
-    Route::get('/listar-planos-total', [PlanosController::class, 'listarTotalPagination']);
-    Route::get('/listar-planos/{startRow}/{limit}/{sortBy}', [PlanosController::class, 'listarPagination']);
-    Route::post('/salvar-planos', [PlanosController::class, 'salvar']);
-    Route::post('/excluir-planos', [PlanosController::class, 'excluir']);
-    Route::get('/buscar-planos/{id}', [PlanosController::class, 'buscarPorId']);
-
     // Categoria
     Route::get('/listar-categoria-total', [CategoriaController::class, 'listarTotalPagination']);
     Route::get('/listar-categoria/{startRow}/{limit}/{sortBy}', [CategoriaController::class, 'listarPagination']);

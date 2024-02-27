@@ -55,7 +55,7 @@ class UsuarioController extends Controller
             $usuarioRepo = new UsuarioRepository($this->usuario);
 
             if ($request->id){
-                if($user->isAdmin() || $user->isRoot()) {
+                if($user->isAdmin()) {
                     $idUser = $request->id;
                 } else {
                     $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
@@ -67,7 +67,7 @@ class UsuarioController extends Controller
 
             $usuario = $usuarioRepo->buscarPorId($idUser); // Busco o usuario do banco para poder atualizar
 
-            if(($user->isAdmin() || $user->isRoot()) && $request->status){
+            if($user->isAdmin() && $request->status){
                 $usuario->status_id = $request->status;
             }
 
@@ -132,7 +132,7 @@ class UsuarioController extends Controller
 
             $user = Auth::user();
 
-            if($user->isAdmin() || $user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $usuario = $this->getUserById($idUser);
 
@@ -179,7 +179,7 @@ class UsuarioController extends Controller
         try {
             $user = Auth::user();
 
-            if($user->isAdmin() || $user->isRoot()) {
+            if($user->isAdmin()) {
                 // Alterando os dados do usuario
                 $usuarioRepo = new UsuarioRepository($this->usuario);
 
@@ -206,7 +206,7 @@ class UsuarioController extends Controller
             $user = auth()->userOrFail();
 
             //$filter = $request->query('filter');
-            if($user->isAdmin() || $user->isRoot()) {
+            if($user->isAdmin()) {
 
                 // Alterando os dados do usuario
                 $usuarioRepo = new UsuarioRepository($this->usuario);
@@ -287,7 +287,7 @@ class UsuarioController extends Controller
 
             $user = Auth::userOrFail();
 
-            if($user->isAdmin() || $user->isRoot()) {
+            if($user->isAdmin()) {
 
                 // excluindo os dados do usuario
                 $usuarioRepo = new UsuarioRepository($this->usuario);

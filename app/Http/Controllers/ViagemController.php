@@ -181,7 +181,7 @@ class ViagemController extends Controller
 
             $repository = new ViagemRepository($this->viagem);
 
-            if($user->isRoot() || $user->isAdmin()) {
+            if($user->isAdmin()) {
                 $lista = $repository->listarPagination($startRow, $limit, $sortBy, 'id');
             } else {
                 $lista = $repository->listarPaginationViagem($startRow, $limit, $sortBy, 'id', $user->id);
@@ -215,7 +215,7 @@ class ViagemController extends Controller
 
             $repository = new ViagemRepository($this->viagem);
 
-            if($user->isRoot() || $user->isAdmin()) {
+            if($user->isAdmin()) {
                 $total = $repository->listarTotalPagination();
             } else {
                 $total = $repository->listarTotalPaginationViagem($user->id);
@@ -254,7 +254,7 @@ class ViagemController extends Controller
 
             $idViagem = $request->id;
 
-            if($user->isRoot() || $user->isAdmin()) {
+            if($user->isAdmin()) {
                 $viagem = $repository->buscarPorId($idViagem);
             } else {
                 $viagem = $repository->buscarViagemPorUser($user->id, $idViagem);

@@ -90,7 +90,7 @@ class StatusController extends Controller
 
         $user = Auth::user();
 
-        if($user->isRoot()) {
+        if($user->isAdmin()) {
 
             $statusRepo = new StatusRepository($this->status);
 
@@ -113,7 +113,7 @@ class StatusController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $statusRepo = new StatusRepository($this->status);
 
@@ -141,7 +141,7 @@ class StatusController extends Controller
 
             $user = auth()->userOrFail();
 
-            if($user->isRoot()) {
+            if($user->isAdmin()) {
 
                 $statusRepo = new StatusRepository($this->status);
 
