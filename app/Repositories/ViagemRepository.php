@@ -6,6 +6,11 @@ use App\Models\Viagem;
 
 class ViagemRepository extends AbstractRepository {
 
+    public function buscarViagemPorId($id){
+        $this->model = $this->model->where('status', '=', 1)->get();
+        return $this->model;
+    }
+
     public function buscarViagemPorUser($idUser, $idViagem){
         $this->model = $this->model->where([['user_id', '=', $idUser], ['id', '=', $idViagem]])->first();
         return $this->model;
@@ -18,7 +23,7 @@ class ViagemRepository extends AbstractRepository {
 
     public function listarTotalPaginationViagem($userId){
 
-        $total = $this->model->where('user_id','=', $userId)->count();
+        $total = $this->model->where([['user_id','=', $userId], ['status', '=', 1]])->count();
 
         return  $total;
 
@@ -36,7 +41,7 @@ class ViagemRepository extends AbstractRepository {
             $limit = 10;
         }
 
-        $this->model = $this->model->where('user_id','=', $userId)->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+        $this->model = $this->model->where([['user_id','=', $userId], ['status', '=', 1]])->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
 
         return $this->model;
 

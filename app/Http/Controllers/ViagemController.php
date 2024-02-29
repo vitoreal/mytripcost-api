@@ -70,21 +70,35 @@ class ViagemController extends Controller
             // Alterando os dados do usuario
             $repository = new ViagemRepository($this->viagem);
 
-            $idViagem = 0;
+            $idViagem = 0; // Flag para verificar se é um cadastro novo
 
             if($request->id){
                 $idViagem = $request->id;
             }
 
             $total = $repository->verificarNomeExiste($request->nome, $user->id, $idViagem);
+            $totalRegistro = $repository->totalRegistroPorIdUser($user->id);
 
             if($total > 0){
                 $retorno = ['type' => 'WARNING', 'mensagem' => 'Já existe uma viagem com esse nome!'];
                 return response()->json($retorno, Response::HTTP_OK);
             }
 
-            //dd($request->all());
-            //exit;
+            // Verificando se é o primeiro registro. Todo primeiro registro de viagem tem que ter status = 1 (ATIVO)
+            if($totalRegistro > 0){
+                if($user->roles[0]->name == 'BASICO'){
+
+                    // Atualizando todas as viagens do usuario mais antigas para o status = 0 (INATIVA)
+                    $listaViagens = $repository->buscarRegistroPorIdUser($user->id);
+
+                    if(count($listaViagens)){
+                        foreach ($listaViagens as $key => $value) {
+                            $listaViagens[$key]->status = 0;
+                            $repository->salvar($listaViagens[$key]);
+                        }
+                    }
+                }
+            }
 
             $acao = ['cadastrado', 'cadastrar'];
 
@@ -112,6 +126,8 @@ class ViagemController extends Controller
             $viagem->orcamento = $orcamento;
             $viagem->descricao = $request->descricao;
 
+            $viagem->status = 1;
+
             if($request->foto){
                 //$file = base64_encode(file_get_contents($request->foto->path()));
 
@@ -138,8 +154,8 @@ class ViagemController extends Controller
 
 
 
-        } catch (UserNotDefinedException | QueryException $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage()];
+        } catch (UserNotDefinedException | QueryException | Exception $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'userid' => $user->id, 'error' => $e->getMessage()];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }
@@ -154,7 +170,11 @@ class ViagemController extends Controller
 
             $repository = new ViagemRepository($this->viagem);
 
-            $result = $repository->buscarPorId($id);
+            if($user->isAdmin()) {
+                $result = $repository->buscarPorId($id);
+            } else {
+                $result = $repository->buscarViagemPorId($id);
+            }
 
             $files = Storage::get($result->foto);
 

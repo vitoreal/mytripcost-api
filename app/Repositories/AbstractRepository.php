@@ -17,8 +17,7 @@ abstract class AbstractRepository {
     }
 
     public function salvar($request){
-        
-        //$this->model = $this->model->save($request->all());
+
         $this->model = $request->save();
         return $this->model;
 
@@ -26,6 +25,16 @@ abstract class AbstractRepository {
 
     public function buscarPorId($id){
         $this->model = $this->model->find($id);
+        return $this->model;
+    }
+
+    public function totalRegistroPorIdUser($id){
+        $total = $this->model->where('user_id', $id)->count();
+        return $total;
+    }
+
+    public function buscarRegistroPorIdUser($id){
+        $this->model = $this->model->where('user_id', $id)->get();
         return $this->model;
     }
 
@@ -37,7 +46,7 @@ abstract class AbstractRepository {
     public function listarTotalPagination(){
 
         $total = $this->model->all()->count();
-    
+
         return  $total;
 
     }
@@ -57,7 +66,7 @@ abstract class AbstractRepository {
         }
 
         $this->model = $this->model->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
-        
+
         return $this->model;
 
     }

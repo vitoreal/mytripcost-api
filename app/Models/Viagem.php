@@ -26,6 +26,7 @@ class Viagem extends Model
         'foto',
         'id_moeda',
         'user_id',
+        'status',
     ];
 
 

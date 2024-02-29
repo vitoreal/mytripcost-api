@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('descricao', 1000)->nullable();
             $table->string('foto', 200)->nullable();
             $table->boolean('privado');
+            $table->boolean('status');
             $table->foreignId('id_moeda')->references('id')->on('moeda');
             $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamps();
