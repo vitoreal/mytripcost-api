@@ -7,7 +7,7 @@ use App\Models\Viagem;
 class ViagemRepository extends AbstractRepository {
 
     public function buscarViagemPorId($id){
-        $this->model = $this->model->where('status', '=', 1)->get();
+        $this->model = $this->model->where([['status', '=', '1'], ['id', '=', $id]])->first();
         return $this->model;
     }
 

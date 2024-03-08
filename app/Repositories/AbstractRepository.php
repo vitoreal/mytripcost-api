@@ -18,8 +18,8 @@ abstract class AbstractRepository {
 
     public function salvar($request){
 
-        $this->model = $request->save();
-        return $this->model;
+        $resposta = $request->save();
+        return $resposta; // true or false
 
     }
 

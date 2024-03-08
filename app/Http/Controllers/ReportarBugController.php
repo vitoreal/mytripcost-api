@@ -95,7 +95,7 @@ class ReportarBugController extends Controller
                 $files = Storage::get($result->foto);
 
                 $base64 = base64_encode($files);
-                $result->foto = $base64;
+                $result->foto = 'data:image/jpeg;base64,'.$base64;
 
                 $retorno = [
                     'result' => $result

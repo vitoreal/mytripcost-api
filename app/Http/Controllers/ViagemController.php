@@ -108,7 +108,10 @@ class ViagemController extends Controller
                 $acao = ['alterado', 'alterar'];
 
                 if($request->foto){
-                    Storage::delete($viagem->foto);
+                    if($viagem->foto){
+                        Storage::delete($viagem->foto);
+                    }
+
                 }
 
             } else {
@@ -132,7 +135,7 @@ class ViagemController extends Controller
                 //$file = base64_encode(file_get_contents($request->foto->path()));
 
                 $path = $request->file('foto')->store(
-                    $this->diretorio.'/'.$user->id
+                    $this->diretorio.$user->id
                 );
 
                 $viagem->foto = $path;
@@ -155,7 +158,7 @@ class ViagemController extends Controller
 
 
         } catch (UserNotDefinedException | QueryException | Exception $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'userid' => $user->id, 'error' => $e->getMessage()];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $request->id];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }
@@ -176,11 +179,12 @@ class ViagemController extends Controller
                 $result = $repository->buscarViagemPorId($id);
             }
 
-            $files = Storage::get($result->foto);
+            if($result->foto){
+                $files = Storage::get($result->foto);
 
-            $base64 = base64_encode($files);
-            $result->foto = $base64;
-
+                $base64 = base64_encode($files);
+                $result->foto = 'data:image/jpeg;base64,'.$base64;
+            }
             $retorno = [
                 'result' => $result
             ];
@@ -188,7 +192,7 @@ class ViagemController extends Controller
             return response()->json($retorno, 200);
 
         }  catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $result ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
     }
