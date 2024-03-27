@@ -131,6 +131,8 @@ class ViagemController extends Controller
 
             $viagem->status = 1;
 
+            $novaFoto = "";
+
             if($request->foto){
                 //$file = base64_encode(file_get_contents($request->foto->path()));
 
@@ -139,6 +141,11 @@ class ViagemController extends Controller
                 );
 
                 $viagem->foto = $path;
+
+                $files = Storage::get($path);
+
+                $base64 = base64_encode($files);
+                $novaFoto = 'data:image/jpeg;base64,'.$base64;
             }
 
             $viagem->id_moeda = $request->moeda;
@@ -147,11 +154,11 @@ class ViagemController extends Controller
             $repository->salvar($viagem);
 
             if($repository === null){
-                $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível '.$acao[1].' o dado!'];
+                $retorno = ['type' => 'ERROR', 'mensagem' => 'Não foi possível '.$acao[1].' o dado!' ];
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             } else {
 
-                $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro '.$acao[0].' com sucesso!'];
+                $retorno = ['type' => 'SUCESSO', 'mensagem' => 'Registro '.$acao[0].' com sucesso!', 'foto' => $novaFoto];
                 return response()->json($retorno, Response::HTTP_OK);
             }
 

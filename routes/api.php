@@ -66,16 +66,23 @@ Route::prefix('endereco')->middleware('jwt.auth')->group(function() {
     Route::get('/lista-cidade/{idEstado}', [EnderecoController::class, 'listaCidade']);
 });
 
-// VIAGEM CONTROLLER
+// VIAGEM CONTROLLER | FOTOS VIAGEM CONTROLLER
+
 Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
+
+    // VIAGEM CONTROLLER
+
     Route::get('/listar-viagem-total', [ViagemController::class, 'listarTotalPagination']);
     Route::get('/listar-viagem/{startRow}/{limit}/{sortBy}', [ViagemController::class, 'listarPagination']);
     Route::post('/salvar-viagem', [ViagemController::class, 'salvar']);
     Route::post('/excluir-viagem', [ViagemController::class, 'excluir']);
     Route::get('/buscar-viagem/{id}', [ViagemController::class, 'buscarPorId']);
-    Route::get('/foto-viagem/{id}', [ViagemController::class, 'listarFotoViagem']);
-    Route::get('/salvar-foto-viagem/{id}', [ViagemController::class, 'salvarFotoViagem']);
-    Route::get('/excluir-foto-viagem/{id}', [ViagemController::class, 'excluirFotoViagem']);
+
+    // FOTOS VIAGEM
+
+    Route::get('/salvar-foto-viagem/{id}', [FotosViagemController::class, 'salvarFotoViagem']);
+    Route::get('/excluir-foto-viagem/{id}', [FotosViagemController::class, 'excluirFotoViagem']);
+    Route::get('/foto-viagem/{id}', [FotosViagemController::class, 'listarFotoViagem']);
 });
 
 // VIAGEM CONTROLLER
