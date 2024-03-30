@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EnderecoController;
+use App\Http\Controllers\FotosViagemController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MetodoPagamentoController;
 use App\Http\Controllers\MoedaController;
@@ -80,9 +81,9 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
 
     // FOTOS VIAGEM
 
-    Route::get('/salvar-foto-viagem/{id}', [FotosViagemController::class, 'salvarFotoViagem']);
-    Route::get('/excluir-foto-viagem/{id}', [FotosViagemController::class, 'excluirFotoViagem']);
-    Route::get('/foto-viagem/{id}', [FotosViagemController::class, 'listarFotoViagem']);
+    Route::post('/salvar-foto-viagem', [FotosViagemController::class, 'salvar']);
+    Route::get('/excluir-foto-viagem/{id}', [FotosViagemController::class, 'excluir']);
+    Route::get('/foto-viagem/{id}', [FotosViagemController::class, 'listar']);
 });
 
 // VIAGEM CONTROLLER
