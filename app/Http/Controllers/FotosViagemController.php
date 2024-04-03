@@ -98,4 +98,114 @@ class FotosViagemController extends Controller
 
         }
     }
+
+    public function listarPagination( int $idViagem, string $startRow, string $limit, string $sortBy){
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            $repoViagem = new ViagemRepository($this->viagem);
+            $viagem = $repoViagem->buscarPorId($idViagem);
+
+            $repository = new FotoViagemRepository($this->fotoViagem);
+
+            if(($viagem->user_id == $user->id) || $user->isAdmin()){
+                $lista = $repository->listarPaginationFotoViagem($idViagem, $startRow, $limit, $sortBy, 'id');
+                $retorno = ['lista' => $lista ];
+                return response()->json($retorno, Response::HTTP_OK);
+            }
+
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+        } catch (UserNotDefinedException | UnauthorizedHttpException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+        }
+
+    }
+
+    public function listarTotalPagination(int $idViagem){
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            $repoViagem = new ViagemRepository($this->viagem);
+            $viagem = $repoViagem->buscarPorId($idViagem);
+
+            $repository = new FotoViagemRepository($this->fotoViagem);
+
+            $total = 0;
+
+            if(($viagem->user_id == $user->id) || $user->isAdmin()){
+                $total = $repository->listarTotalPaginationFotoViagem($idViagem);
+                $retorno = ['total' => $total ];
+                return response()->json($retorno, Response::HTTP_OK);
+            }
+
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+        } catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+        }
+
+    }
+
+    /**
+     * Metodo para alterar a senha
+     *
+     * @return response()
+     */
+    public function excluir(Request $request)
+    {
+
+        try {
+
+            $user = Auth::userOrFail();
+
+            $repository = new ViagemRepository($this->viagem);
+
+            $idViagem = $request->id;
+
+            if($user->isAdmin()) {
+                $viagem = $repository->buscarPorId($idViagem);
+            } else {
+                $viagem = $repository->buscarViagemPorUser($user->id, $idViagem);
+
+            }
+
+            if($viagem){
+
+                if($viagem->foto != ''){
+                    Storage::delete($viagem->foto);
+
+                    $diretorio = $this->diretorio.'/'.$user->id;
+
+                    $files = Storage::allFiles($diretorio);
+
+                    if(count($files) == 0){
+                        Storage::deleteDirectory($diretorio);
+                    }
+
+                }
+
+                $repository->excluir($idViagem);
+
+                return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
+
+            }
+
+            return response()->json(['type' => 'ERROR', 'mensagem' => 'Você não tem permissão para deletar esse registro!'], Response::HTTP_BAD_REQUEST);
+
+        }  catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+        }
+
+    }
 }
