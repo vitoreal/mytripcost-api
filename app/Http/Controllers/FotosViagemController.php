@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 
 class FotosViagemController extends Controller
@@ -75,6 +76,8 @@ class FotosViagemController extends Controller
                 }
 
                 $fotoViagem->id_viagem = $request->idViagem;
+                $fotoViagem->mimetype = Storage::mimeType($path);
+                $fotoViagem->extension = $request->file('foto')->getClientOriginalExtension();
 
                 $repository->salvar($fotoViagem);
 
@@ -112,6 +115,13 @@ class FotosViagemController extends Controller
 
             if(($viagem->user_id == $user->id) || $user->isAdmin()){
                 $lista = $repository->listarPaginationFotoViagem($idViagem, $startRow, $limit, $sortBy, 'id');
+
+                foreach ($lista as $key => $value) {
+                        $file = Storage::get($value->foto);
+                        $base64 = base64_encode($file);
+                        $lista[$key]->foto = 'data:'.$value->mimetype.';base64,'.$base64;
+                }
+
                 $retorno = ['lista' => $lista ];
                 return response()->json($retorno, Response::HTTP_OK);
             }

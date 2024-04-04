@@ -18,6 +18,6 @@ class FotoViagem extends Model
      */
     protected $table = 'fotos_viagem';
 
-    protected $fillable = ['foto', 'id_viagem'];
+    protected $fillable = ['foto', 'id_viagem', 'mimetype', 'extension'];
 
 }
