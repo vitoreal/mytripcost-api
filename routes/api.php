@@ -82,7 +82,7 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
     // FOTOS VIAGEM
 
     Route::post('/salvar-foto-viagem', [FotosViagemController::class, 'salvar']);
-    Route::get('/excluir-foto-viagem/{id}', [FotosViagemController::class, 'excluir']);
+    Route::post('/excluir-foto-viagem', [FotosViagemController::class, 'excluir']);
     Route::get('/foto-viagem/{id}', [FotosViagemController::class, 'listar']);
     Route::get('/listar-foto-viagem-total/{idFoto}', [FotosViagemController::class, 'listarTotalPagination']);
     Route::get('/listar-foto-viagem/{idFoto}/{startRow}/{limit}/{sortBy}', [FotosViagemController::class, 'listarPagination']);

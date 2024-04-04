@@ -8,7 +8,6 @@ use App\Repositories\ViagemRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -279,7 +278,7 @@ class ViagemController extends Controller
 
         try {
 
-            $user = Auth::userOrFail();
+            $user = auth()->userOrFail();
 
             $repository = new ViagemRepository($this->viagem);
 

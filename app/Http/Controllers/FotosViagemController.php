@@ -176,35 +176,37 @@ class FotosViagemController extends Controller
 
         try {
 
-            $user = Auth::userOrFail();
+            $user = auth()->userOrFail();
 
-            $repository = new ViagemRepository($this->viagem);
+            $repoViagem = new ViagemRepository($this->viagem);
 
-            $idViagem = $request->id;
+            $repository = new FotoViagemRepository($this->fotoViagem);
+
+            $idFoto = $request->id;
+            $idViagem = $request->idViagem;
 
             if($user->isAdmin()) {
-                $viagem = $repository->buscarPorId($idViagem);
+                $viagem = $repoViagem->buscarPorId($idViagem);
             } else {
-                $viagem = $repository->buscarViagemPorUser($user->id, $idViagem);
-
+                $viagem = $repoViagem->buscarViagemPorUser($user->id, $idViagem);
             }
 
             if($viagem){
 
-                if($viagem->foto != ''){
-                    Storage::delete($viagem->foto);
+                $fotoViagem = $repository->buscarPorId($idFoto);
 
-                    $diretorio = $this->diretorio.'/'.$user->id;
+                Storage::delete($fotoViagem->foto);
 
-                    $files = Storage::allFiles($diretorio);
+                $diretorio = $this->diretorio.'/'.$user->id;
 
-                    if(count($files) == 0){
-                        Storage::deleteDirectory($diretorio);
-                    }
+                $files = Storage::allFiles($diretorio);
 
+                if(count($files) == 0){
+                    Storage::deleteDirectory($diretorio);
                 }
 
-                $repository->excluir($idViagem);
+
+                $repository->excluir($idFoto);
 
                 return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
 
