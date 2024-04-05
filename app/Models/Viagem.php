@@ -17,7 +17,6 @@ class Viagem extends Model
     protected $table = 'viagem';
 
     protected $fillable = [
-        'privado',
         'descricao',
         'nome',
         'orcamento',
@@ -27,6 +26,7 @@ class Viagem extends Model
         'id_moeda',
         'user_id',
         'status',
+        'id_tipo_privacidade'
     ];
 
 

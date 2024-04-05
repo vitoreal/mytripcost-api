@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -41,7 +40,7 @@ class EstadoSeeder extends Seeder
         (25, 'Sergipe', 'SE'),
         (26, 'São Paulo', 'SP'),
         (27, 'Tocantins', 'TO')";
-        
+
         DB::statement($estados);
         //DB::table('estado')->insert( DB::raw($estados) );
 

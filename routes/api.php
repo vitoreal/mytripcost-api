@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriaController;
@@ -11,8 +10,8 @@ use App\Http\Controllers\FotosViagemController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MetodoPagamentoController;
 use App\Http\Controllers\MoedaController;
-use App\Http\Controllers\PlanosController;
 use App\Http\Controllers\ReportarBugController;
+use App\Http\Controllers\TipoPrivacidadeController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ViagemController;
 
@@ -124,6 +123,9 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
 
     // Moeda
     Route::get('/listar-moeda', [MoedaController::class, 'listarMoeda']);
+
+    // Tipo Privacidade
+    Route::get('/listar-tipo-privacidade', [TipoPrivacidadeController::class, 'listar']);
 
 });
 

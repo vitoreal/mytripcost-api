@@ -31,7 +31,7 @@ class ViagemController extends Controller
 
             $rules = [
                 'moeda' => 'required',
-                'privado' => 'required',
+                'tipoPrivacidade' => 'required',
                 'nome' => 'required|string|max:100',
                 'descricao' => 'string|max:1000',
                 'orcamento' => 'required',
@@ -41,7 +41,7 @@ class ViagemController extends Controller
 
             $messages = [
                 'moeda.required' => 'Campo moeda é o obrigatório',
-                'privado.required' => 'Campo privado é o obrigatório',
+                'tipoPrivacidade.required' => 'Campo privacidade é o obrigatório',
                 'nome.required' => 'Campo nome é o obrigatório',
                 'nome.max' => 'Campo nome não pode ultrapassar de 100 caracteres',
                 'descricao.max' => 'Campo descrição não pode ultrapassar de 1000 caracteres',
@@ -118,7 +118,7 @@ class ViagemController extends Controller
             }
 
             $viagem->nome = $request->nome;
-            $viagem->privado = $request->privado;
+            $viagem->id_tipo_privacidade = $request->tipoPrivacidade;
             $viagem->data_inicio = $request->dataInicio;
             $viagem->data_fim = $request->dataFim;
 
@@ -164,7 +164,7 @@ class ViagemController extends Controller
 
 
         } catch (UserNotDefinedException | QueryException | Exception $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $request->id];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage()];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }
