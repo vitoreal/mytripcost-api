@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FotoViagem;
 use Illuminate\Http\Request;
 use App\Models\Viagem;
+use App\Repositories\FotoViagemRepository;
 use App\Repositories\ViagemRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
@@ -15,8 +17,9 @@ use Throwable;
 class ViagemController extends Controller
 {
 
-    public function __construct(Viagem $viagem, string $diretorio = 'images/foto-viagem/'){
+    public function __construct(Viagem $viagem, FotoViagem $fotoViagem, string $diretorio = 'images/foto-viagem/'){
         $this->viagem = $viagem;
+        $this->fotoViagem = $fotoViagem;
         $this->diretorio = $diretorio;
     }
 
@@ -293,7 +296,20 @@ class ViagemController extends Controller
 
             if($viagem){
 
+                $repoFotoViagem = new FotoViagemRepository($this->fotoViagem);
+
                 if($viagem->foto != ''){
+
+                    $fotoViagem = $repoFotoViagem->buscarPorIdViagem($idViagem);
+
+                    if($fotoViagem){
+                        foreach ($fotoViagem as $key => $value) {
+
+                            $repoFotoViagem->excluir($value->id);
+                            Storage::delete($value->foto);
+                        }
+                    }
+
                     Storage::delete($viagem->foto);
 
                     $diretorio = $this->diretorio.'/'.$user->id;

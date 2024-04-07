@@ -7,7 +7,6 @@ use App\Models\Cidade;
 use App\Models\Estado;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Repositories\EnderecoRepository;
 use App\Repositories\EstadoRepository;
 use App\Repositories\CidadeRepository;
 
@@ -18,17 +17,16 @@ class EnderecoController extends Controller
         $this->cidade = $cidade;
         $this->estado = $estado;
     }
-    
+
     public function listaEstado()
     {
-        
         $estadoRepo = new EstadoRepository($this->estado);
 
         $estadoRepo->findAll();
         $estado = array();
 
         if($estadoRepo){
-           
+
             $estado = $estadoRepo->model;
             return response()->json($estado, Response::HTTP_OK);
 
@@ -42,7 +40,7 @@ class EnderecoController extends Controller
      */
     public function listaCidade(Request $request)
     {
-        
+
         $cidadeRepo = new CidadeRepository($this->cidade);
 
         $cidadeRepo->findPorIdEstado($request->idEstado);
@@ -50,13 +48,13 @@ class EnderecoController extends Controller
         $cidade = array();
 
         if($cidadeRepo){
-            
-            $cidade = $cidadeRepo->cidade;
+
+            $cidade = $cidadeRepo->model;
             return response()->json($cidade, Response::HTTP_OK);
 
         } else {
             return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível buscar os estados!'], Response::HTTP_BAD_REQUEST);
         }
     }
-    
+
 }

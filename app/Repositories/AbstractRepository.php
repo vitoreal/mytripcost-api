@@ -39,7 +39,11 @@ abstract class AbstractRepository {
     }
 
     public function excluir($id){
-        $deleted = $this->model->where('id', $id)->delete();
+        $model = $this->model->find($id);
+
+        $model->delete();
+
+        //$deleted = $this->model->where('id', $id)->delete();
     }
 
 
