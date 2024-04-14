@@ -15,28 +15,11 @@ jobs:
             - name: Checkout no repositorio
               run: echo building the app web
 
-    deploy-homologacao:
-        runs-on: ubuntu-latest
-        environment:
-            name: homologacao
-            url: 'hml.mytripcost.com.br'
-        steps:
-            - name: Repo checkout
-              uses: actions/checkout@v2
-            - name: Deploy para o desenvolvimento HML
-              uses: SamKirkland/FTP-Deploy-Action@4.0.0
-              with:
-                server: ${{ secrets.FTP_HOST }}
-                username: ${{ secrets.FTP_USER }}
-                password: ${{ secrets.FTP_PASSWORD }}
-                server-dir: ${{vars.REMOTE_TARGET_HML}}
-
     deploy-production:
         runs-on: ubuntu-latest
         environment:
             name: production
             url: 'app.mytripcost.com.br'
-        needs: deploy-homologacao
         steps:
             - name: Repo checkout
               uses: actions/checkout@v2
