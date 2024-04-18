@@ -227,6 +227,15 @@ class ViagemController extends Controller
                 $lista[$key]->data_fim = date("d/m/Y", strtotime($value->data_fim));
 
 
+
+                if($lista[$key]->foto){
+
+                    $files = Storage::get($lista[$key]->foto);
+
+                    $base64 = base64_encode($files);
+                    $lista[$key]->foto = 'data:image/jpeg;base64,'.$base64;
+                }
+
             }
 
             $retorno = ['lista' => $lista ];
