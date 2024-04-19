@@ -25,6 +25,7 @@ class MetodoPagamentoSeeder extends Seeder
             ['nome' => 'Vale Combustível'],
             ['nome' => 'Vale Presente'],
             ['nome' => 'Vale Refeição'],
+            ['nome' => 'Outros'],
         );
 
         DB::table('metodo_pagamento')->insert($metodoPagamento);
