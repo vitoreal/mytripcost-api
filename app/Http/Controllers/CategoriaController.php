@@ -201,4 +201,22 @@ class CategoriaController extends Controller
 
     }
 
+    public function listarCategoria()
+    {
+
+        $repository = new CategoriaRepository($this->categoria);
+
+        $repository->findAll();
+        $categoria = array();
+
+        if($repository){
+
+            $categoria = $repository->model;
+            return response()->json($categoria, Response::HTTP_OK);
+
+        } else {
+            return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível buscar as categorias!'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
 }

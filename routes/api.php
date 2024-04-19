@@ -106,6 +106,7 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::post('/salvar-categoria', [CategoriaController::class, 'salvar']);
     Route::post('/excluir-categoria', [CategoriaController::class, 'excluir']);
     Route::get('/buscar-categoria/{id}', [CategoriaController::class, 'buscarPorId']);
+    Route::get('/listar-categoria', [CategoriaController::class, 'listarCategoria']);
 
     // Metodos de Pagamento
     Route::get('/listar-metodo-pagamento-total', [MetodoPagamentoController::class, 'listarTotalPagination']);
@@ -113,6 +114,10 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::post('/salvar-metodo-pagamento', [MetodoPagamentoController::class, 'salvar']);
     Route::post('/excluir-metodo-pagamento', [MetodoPagamentoController::class, 'excluir']);
     Route::get('/buscar-metodo-pagamento/{id}', [MetodoPagamentoController::class, 'buscarPorId']);
+    Route::get('/listar-metodo-pagamento', [MetodoPagamentoController::class, 'listarMetodoPagamento']);
+
+
+
 
     // Reportar BUG
     Route::get('/listar-reportar-bug-total', [ReportarBugController::class, 'listarTotalPagination']);

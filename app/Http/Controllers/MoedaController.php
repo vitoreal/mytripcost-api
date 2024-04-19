@@ -27,7 +27,7 @@ class MoedaController extends Controller
             return response()->json($moeda, Response::HTTP_OK);
 
         } else {
-            return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível buscar os estados!'], Response::HTTP_BAD_REQUEST);
+            return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível buscar as moedas!'], Response::HTTP_BAD_REQUEST);
         }
     }
 

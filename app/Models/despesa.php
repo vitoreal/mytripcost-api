@@ -21,7 +21,6 @@ class despesa extends Model
         'valor',
         'data_despesa',
         'id_moeda',
-        'id_paises',
         'id_viagem',
         'id_categoria',
         'id_categoria_personalizada',

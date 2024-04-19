@@ -15,14 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('nome', 200);
             $table->decimal('valor');
-            $table->date('data_despesa');
+            $table->date('data_despesa')->nullable();
             $table->foreignId('id_moeda')->references('id')->on('moeda');
-            $table->foreignId('id_paises')->references('id')->on('paises');
             $table->foreignId('id_viagem')->references('id')->on('viagem');
-            $table->foreignId('id_categoria')->references('id')->on('categoria');
-            $table->foreignId('id_categoria_personalizada')->references('id')->on('categoria_personalizada');
-            $table->foreignId('id_metodo_pagamento')->references('id')->on('metodo_pagamento');
-            $table->string('outros_metodo_pagamento', 100);
+            $table->foreignId('id_categoria')->references('id')->on('categoria')->nullable();
+            $table->foreignId('id_categoria_personalizada')->references('id')->on('categoria_personalizada')->nullable();
+            $table->foreignId('id_metodo_pagamento')->references('id')->on('metodo_pagamento')->nullable();
+            $table->string('outros_metodo_pagamento', 100)->nullable();
             $table->timestamps();
         });
     }

@@ -195,6 +195,23 @@ class MetodoPagamentoController extends Controller
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
 
+    }
 
+    public function listarMetodoPagamento()
+    {
+
+        $repository = new MetodoPagamentoRepository($this->metodoPagamento);
+
+        $repository->findAll();
+        $metodoPagamento = array();
+
+        if($repository){
+
+            $metodoPagamento = $repository->model;
+            return response()->json($metodoPagamento, Response::HTTP_OK);
+
+        } else {
+            return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível buscar os métodos de pagamento!'], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
