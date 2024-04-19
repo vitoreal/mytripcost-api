@@ -23,7 +23,6 @@ class despesa extends Model
         'id_moeda',
         'id_viagem',
         'id_categoria',
-        'id_categoria_personalizada',
         'id_metodo_pagamento',
         'outros_metodo_pagamento'
     ];
