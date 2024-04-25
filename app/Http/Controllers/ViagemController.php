@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
+
 class ViagemController extends Controller
 {
 
