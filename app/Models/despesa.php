@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Despesa extends Model
 {
@@ -26,5 +27,13 @@ class Despesa extends Model
         'id_metodo_pagamento',
         'outros_metodo_pagamento'
     ];
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function viagem(): HasOne
+    {
+        return $this->hasOne(Viagem::class, 'id', 'id_viagem');
+    }
 
 }

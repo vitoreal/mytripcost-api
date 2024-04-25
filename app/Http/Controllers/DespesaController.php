@@ -130,4 +130,34 @@ class DespesaController extends Controller
         }
     }
 
+    // Busca por id - somente admin e root tem acesso
+    public function buscarPorId(int $id){
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            $repository = new DespesaRepository($this->despesa);
+
+            $result = $repository->buscarPorId($id);
+            $viagem = $result->viagem;
+
+            // Verificando se é o proprio usuario da viagem que está cadastrando a despesa
+            if($viagem->user_id != $user->id){
+                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];
+                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+            }
+
+            $retorno = [
+                'result' => $result
+            ];
+
+            return response()->json($retorno, 200);
+
+        }  catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $result ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+        }
+    }
+
 }

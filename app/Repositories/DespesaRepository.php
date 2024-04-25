@@ -9,5 +9,4 @@ class DespesaRepository extends AbstractRepository {
         return $total;
     }
 
-
 }
