@@ -38,8 +38,8 @@ class UsuarioController extends Controller
                 'status' => $request->status != '' ? 'required' : '',
                 'nome' => 'required|string|between:2,100',
                 'telefone' => 'required|string',
-                'cidade' => 'required|string',
-                'estado' => 'required|string',
+                'cidade' => 'required',
+                'estado' => 'required',
                 'cep' => 'required|string',
                 'bairro' => 'required|string|between:2,100',
                 'endereco' => 'required|string|between:2,200',
@@ -48,7 +48,7 @@ class UsuarioController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível validar os campos!'], Response::HTTP_BAD_REQUEST);
+                return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível validar os campos!', 'error-msg' => $validator->errors() ], Response::HTTP_BAD_REQUEST);
             }
 
             // Alterando os dados do usuario
