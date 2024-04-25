@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Despesa;
 use App\Models\Viagem;
+use App\Repositories\DespesaRepository;
+use App\Repositories\ViagemRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
@@ -57,8 +59,7 @@ class DespesaController extends Controller
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             }
 
-            $retorno = [ 'Request' => $request];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
 
             $repositoryViagem = new ViagemRepository($this->viagem);
 
@@ -80,7 +81,7 @@ class DespesaController extends Controller
                     $idDespesa = $request->id;
                 }
 
-                $total = $repository->verificarNomeExiste($request->nome, $user->id, $idDespesa);
+                $total = $repository->verificarNomeExiste($request->nome, $request->idViagem, $idDespesa);
 
                 if($total > 0){
                     $retorno = ['type' => 'WARNING', 'mensagem' => 'Já existe uma despesa com esse nome!'];

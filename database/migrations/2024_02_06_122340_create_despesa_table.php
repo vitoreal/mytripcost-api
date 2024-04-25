@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('data_despesa')->nullable();
             $table->foreignId('id_moeda')->references('id')->on('moeda');
             $table->foreignId('id_viagem')->references('id')->on('viagem');
-            $table->foreignId('id_categoria')->references('id')->on('categoria')->nullable();
+            $table->foreignId('id_categoria')->references('id')->on('categoria');
             $table->foreignId('id_metodo_pagamento')->references('id')->on('metodo_pagamento')->nullable();
             $table->string('outros_metodo_pagamento', 100)->nullable();
             $table->timestamps();
