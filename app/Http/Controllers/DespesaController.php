@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MetodoPagamentoEnum;
 use App\Models\Despesa;
 use App\Models\Viagem;
 use App\Repositories\DespesaRepository;
@@ -79,6 +80,10 @@ class DespesaController extends Controller
 
                 if($request->id){
                     $idDespesa = $request->id;
+                }
+
+                if(MetodoPagamentoEnum::ID_OUTROS != $request->metodoPagamento){
+                    $request->outrosMetodoPagamento = "";
                 }
 
                 $total = $repository->verificarNomeExiste($request->nome, $request->idViagem, $idDespesa);
