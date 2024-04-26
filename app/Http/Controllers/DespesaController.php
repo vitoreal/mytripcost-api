@@ -60,8 +60,6 @@ class DespesaController extends Controller
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             }
 
-
-
             $repositoryViagem = new ViagemRepository($this->viagem);
 
             $viagem = $repositoryViagem->buscarPorId($request->idViagem);
@@ -135,6 +133,64 @@ class DespesaController extends Controller
         }
     }
 
+    public function listarPagination( int $idViagem, string $startRow, string $limit, string $sortBy){
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            $repository = new DespesaRepository($this->despesa);
+
+            $result = $repository->buscarRegistroPorIdViagem($idViagem);
+            $viagem = $result->viagem;
+
+            if(($viagem->user_id == $user->id)){
+                $lista = $repository->listarTotalPaginationDespesaViagem($idViagem, $startRow, $limit, $sortBy, 'id');
+                $retorno = ['lista' => $lista ];
+                return response()->json($retorno, Response::HTTP_OK);
+            }
+
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+        } catch (UserNotDefinedException | UnauthorizedHttpException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+        }
+
+    }
+
+    public function listarTotalPagination(int $idViagem){
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            $repository = new DespesaRepository($this->despesa);
+
+            $result = $repository->buscarRegistroPorIdViagem($idViagem);
+            $result->viagem;
+
+            $retorno = ['viagem' => $result ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+            if(($viagem->user_id == $user->id)){
+                $total = $repository->listarTotalPaginationDespesaViagem($idViagem);
+                $retorno = ['total' => $total ];
+                return response()->json($retorno, Response::HTTP_OK);
+            }
+
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+
+        } catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+        }
+
+    }
+
     // Busca por id - somente admin e root tem acesso
     public function buscarPorId(int $id){
 
@@ -163,6 +219,48 @@ class DespesaController extends Controller
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $result ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    /**
+     * Metodo para alterar a senha
+     *
+     * @return response()
+     */
+    public function excluir(Request $request)
+    {
+
+        try {
+
+            $user = auth()->userOrFail();
+
+            $repository = new DespesaRepository($this->despesa);
+
+            $idDespesa = $request->id;
+
+            $result = $repository->buscarPorId($idDespesa);
+            $viagem = $result->viagem;
+
+            if($viagem){
+
+                // Verificando se é o proprio usuario da viagem que está cadastrando a despesa
+                if($viagem->user_id != $user->id){
+                    $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage()];
+                    return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+                }
+
+                $repository->excluir($idDespesa);
+
+                return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
+
+            }
+
+            return response()->json(['type' => 'ERROR', 'mensagem' => 'Você não tem permissão para deletar esse registro!'], Response::HTTP_BAD_REQUEST);
+
+        }  catch (UserNotDefinedException | Throwable $e ) {
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
+            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+        }
+
     }
 
 }

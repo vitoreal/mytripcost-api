@@ -89,8 +89,8 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
 
 // VIAGEM CONTROLLER
 Route::prefix('despesa')->middleware('jwt.auth')->group(function() {
-    Route::get('/listar-despesa-total', [DespesaController::class, 'listarTotalPagination']);
-    Route::get('/listar-despesa/{startRow}/{limit}/{sortBy}', [DespesaController::class, 'listarPagination']);
+    Route::get('/listar-despesa-total/{idViagem}', [DespesaController::class, 'listarTotalPagination']);
+    Route::get('/listar-despesa/{idViagem}/{startRow}/{limit}/{sortBy}', [DespesaController::class, 'listarPagination']);
     Route::post('/salvar-despesa', [DespesaController::class, 'salvar']);
     Route::post('/excluir-despesa', [DespesaController::class, 'excluir']);
     Route::get('/buscar-despesa/{id}', [DespesaController::class, 'buscarPorId']);
