@@ -11,14 +11,6 @@ class FotoViagemRepository extends AbstractRepository {
         return $this->model;
     }
 
-    public function listarTotalPaginationFotoViagem($idViagem){
-
-        $total = $this->model->where([['id_viagem','=', $idViagem]])->count();
-
-        return  $total;
-
-    }
-
     public function listarPaginationFotoViagem($idViagem, $startRow, $limit, $sortBy, $orderBy){
 
         if($sortBy == ''){
@@ -31,9 +23,17 @@ class FotoViagemRepository extends AbstractRepository {
             $limit = 10;
         }
 
-        $this->model = $this->model->where([['id_viagem','=', $idViagem]])->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+        $query = $this->model->where('id_viagem', $idViagem);
 
-        return $this->model;
+        $total = $query->count();
+        $lista = $query->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+
+        $result = [
+            'total' => $total,
+            'lista' => $lista
+        ];
+
+       return $result;
 
     }
 

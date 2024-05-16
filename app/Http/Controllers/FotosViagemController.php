@@ -116,10 +116,10 @@ class FotosViagemController extends Controller
             if(($viagem->user_id == $user->id) || $user->isAdmin()){
                 $lista = $repository->listarPaginationFotoViagem($idViagem, $startRow, $limit, $sortBy, 'id');
 
-                foreach ($lista as $key => $value) {
+                foreach ($lista['lista'] as $key => $value) {
                         $file = Storage::get($value->foto);
                         $base64 = base64_encode($file);
-                        $lista[$key]->foto = 'data:'.$value->mimetype.';base64,'.$base64;
+                        $lista['lista'][$key]->foto = 'data:'.$value->mimetype.';base64,'.$base64;
                 }
 
                 $retorno = ['lista' => $lista ];
@@ -133,35 +133,6 @@ class FotosViagemController extends Controller
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
-        }
-
-    }
-
-    public function listarTotalPagination(int $idViagem){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repoViagem = new ViagemRepository($this->viagem);
-            $viagem = $repoViagem->buscarPorId($idViagem);
-
-            $repository = new FotoViagemRepository($this->fotoViagem);
-
-            $total = 0;
-
-            if(($viagem->user_id == $user->id) || $user->isAdmin()){
-                $total = $repository->listarTotalPaginationFotoViagem($idViagem);
-                $retorno = ['total' => $total ];
-                return response()->json($retorno, Response::HTTP_OK);
-            }
-
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-
-        } catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
 
     }

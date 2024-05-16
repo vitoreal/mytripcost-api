@@ -54,7 +54,6 @@ Route::prefix('usuario')->middleware('jwt.auth')->group(function() {
     Route::post('/alterar-meus-dados', [UsuarioController::class, 'alterarDados']);
     Route::get('/buscar-dados-usuario/{idUser}', [UsuarioController::class, 'buscarUsuario']);
     Route::post('/alterar-senha', [UsuarioController::class, 'alterarSenha']);
-    Route::get('/listar-usuario-total', [UsuarioController::class, 'listarTotalPagination']);
     Route::get('/listar-usuario/{startRow}/{limit}/{sortBy}', [UsuarioController::class, 'listarPagination']);
     Route::post('/excluir-usuario', [UsuarioController::class, 'excluir']);
 });
@@ -81,7 +80,6 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
     Route::post('/salvar-foto-viagem', [FotosViagemController::class, 'salvar']);
     Route::post('/excluir-foto-viagem', [FotosViagemController::class, 'excluir']);
     Route::get('/foto-viagem/{id}', [FotosViagemController::class, 'listar']);
-    Route::get('/listar-foto-viagem-total/{idFoto}', [FotosViagemController::class, 'listarTotalPagination']);
     Route::get('/listar-foto-viagem/{idFoto}/{startRow}/{limit}/{sortBy}', [FotosViagemController::class, 'listarPagination']);
 });
 

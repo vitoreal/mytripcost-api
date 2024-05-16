@@ -17,8 +17,6 @@ class UsuarioRepository extends AbstractRepository {
 
     public function listarPagination($startRow, $limit, $sortBy, $orderBy){
 
-        //$this->usuario = $this->usuario->where('name','LIKE',"%{$filter}%")->get();
-        //$startRow, $limit, $sortBy
         if($sortBy == ''){
             $sortBy = 'asc';
         }
@@ -29,24 +27,20 @@ class UsuarioRepository extends AbstractRepository {
             $limit = 10;
         }
 
-        $resultado = DB::table('users as u')
-                        ->join('status as s', 'u.status_id', '=', 's.id')
-                        ->where('u.id', '!=', 1)
-                        ->where('u.id', '!=', 2)
-                        ->offset($startRow)->limit($limit)->orderBy('u.'.$orderBy, $sortBy)->get(['u.id', 'u.name', 'u.email', 'u.telefone', 's.nome']);
-        
-        return $resultado;
+        $query = DB::table('users as u')
+                ->join('status as s', 'u.status_id', '=', 's.id')
+                ->where('u.id', '!=', 1)
+                ->where('u.id', '!=', 2);
 
-    }
+        $total = $query->count();
+        $lista = $query->offset($startRow)->limit($limit)->orderBy('u.'.$orderBy, $sortBy)->get(['u.id', 'u.name', 'u.email', 'u.telefone', 's.nome']);
 
-    public function listarTotalPagination(){
+        $result = [
+            'total' => $total,
+            'lista' => $lista
+        ];
 
-        $total = $this->model->all()
-                        ->where('id', '!=', 1)
-                        ->where('id', '!=', 2)
-                        ->count();
-    
-        return  $total;
+       return $result;
 
     }
 

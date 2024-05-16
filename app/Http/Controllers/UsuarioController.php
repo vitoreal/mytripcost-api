@@ -181,9 +181,9 @@ class UsuarioController extends Controller
 
             if($user->isAdmin()) {
                 // Alterando os dados do usuario
-                $usuarioRepo = new UsuarioRepository($this->usuario);
+                $repository = new UsuarioRepository($this->usuario);
 
-                $lista = $usuarioRepo->listarPagination($startRow, $limit, $sortBy, 'name');
+                $lista = $repository->listarPagination($startRow, $limit, $sortBy, 'name');
 
                 $retorno = ['lista' => $lista ];
                 return response()->json($retorno, Response::HTTP_OK);
@@ -194,38 +194,6 @@ class UsuarioController extends Controller
             }
         } catch (UserNotDefinedException | Throwable $e ) {
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'.$e->getMessage() ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-        }
-
-    }
-
-    public function listarTotalPagination(){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            //$filter = $request->query('filter');
-            if($user->isAdmin()) {
-
-                // Alterando os dados do usuario
-                $usuarioRepo = new UsuarioRepository($this->usuario);
-
-                $total = $usuarioRepo->listarTotalPagination();
-
-                $retorno = [
-                    'total' => $total
-                ];
-
-                return response()->json($retorno, Response::HTTP_OK);
-            } else {
-
-                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
-                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-            }
-
-        } catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
         }
 
