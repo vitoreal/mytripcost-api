@@ -141,13 +141,18 @@ class DespesaController extends Controller
 
             $repository = new DespesaRepository($this->despesa);
 
-            $result = $repository->buscarRegistroPorIdViagem($idViagem);
-            $viagem = $result->viagem;
+            $resp = $repository->buscarRegistroPorIdViagem($idViagem);
 
-            if(($viagem->user_id == $user->id)){
-                $lista = $repository->listarTotalPaginationDespesaViagem($idViagem, $startRow, $limit, $sortBy, 'id');
-                $retorno = ['lista' => $lista ];
-                return response()->json($retorno, Response::HTTP_OK);
+            if(count($resp) > 0){
+
+                $viagem = $resp[0]->viagem;
+
+                if(($viagem->user_id == $user->id)){
+                    $result = $repository->listarPaginationDespesaViagem($idViagem, $startRow, $limit, $sortBy, 'id');
+                    $retorno = ['lista' => $result ];
+                    return response()->json($retorno, Response::HTTP_OK);
+                }
+
             }
 
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
@@ -161,37 +166,6 @@ class DespesaController extends Controller
 
     }
 
-    public function listarTotalPagination(int $idViagem){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repository = new DespesaRepository($this->despesa);
-
-            $result = $repository->buscarRegistroPorIdViagem($idViagem);
-            $result->viagem;
-
-            $retorno = ['viagem' => $result ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-
-            if(($viagem->user_id == $user->id)){
-                $total = $repository->listarTotalPaginationDespesaViagem($idViagem);
-                $retorno = ['total' => $total ];
-                return response()->json($retorno, Response::HTTP_OK);
-            }
-
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-
-        } catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-        }
-
-    }
-
-    // Busca por id - somente admin e root tem acesso
     public function buscarPorId(int $id){
 
         try {
@@ -201,19 +175,30 @@ class DespesaController extends Controller
             $repository = new DespesaRepository($this->despesa);
 
             $result = $repository->buscarPorId($id);
-            $viagem = $result->viagem;
 
-            // Verificando se é o proprio usuario da viagem que está cadastrando a despesa
-            if($viagem->user_id != $user->id){
+
+            if($result){
+
+                $viagem = $result[0]->viagem;
+
+                // Verificando se é o proprio usuario da viagem que está buscando a despesa
+                if($viagem->user_id != $user->id){
+                    $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];
+                    return response()->json($retorno, Response::HTTP_BAD_REQUEST);
+                }
+
+                $retorno = [
+                    'result' => $result
+                ];
+
+                return response()->json($retorno, 200);
+
+            } else {
                 $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             }
 
-            $retorno = [
-                'result' => $result
-            ];
 
-            return response()->json($retorno, 200);
 
         }  catch (UserNotDefinedException | Throwable $e ) {
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $result ];

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Despesa extends Model
@@ -29,11 +30,10 @@ class Despesa extends Model
     ];
 
     /**
-     * The roles that belong to the user.
+     * Get the user that owns the phone.
      */
-    public function viagem(): HasOne
+    public function viagem(): BelongsTo
     {
-        return $this->hasOne(Viagem::class, 'id', 'id_viagem');
+        return $this->belongsTo(Viagem::class, 'id_viagem', 'id');
     }
-
 }

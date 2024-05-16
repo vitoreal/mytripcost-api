@@ -10,16 +10,8 @@ class DespesaRepository extends AbstractRepository {
     }
 
     public function buscarRegistroPorIdViagem($id){
-        $this->model = $this->model->where('id_viagem', $id)->get();
-        return $this->model;
-    }
-
-    public function listarTotalPaginationDespesaViagem($idViagem){
-
-        $total = $this->model->where([['id_viagem','=', $idViagem]])->count();
-
-        return  $total;
-
+        $result = $this->model->where('id_viagem', $id)->get();
+        return $result;
     }
 
     public function listarPaginationDespesaViagem($idViagem, $startRow, $limit, $sortBy, $orderBy){
@@ -34,9 +26,17 @@ class DespesaRepository extends AbstractRepository {
             $limit = 10;
         }
 
-        $this->model = $this->model->where([['id_viagem','=', $idViagem]])->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+        $query = $this->model->where('id_viagem', $idViagem);
 
-        return $this->model;
+        $total = $query->count();
+        $lista = $query->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+
+        $result = [
+            'total' => $total,
+            'lista' => $lista
+        ];
+
+       return $result;
 
     }
 
