@@ -47,14 +47,6 @@ abstract class AbstractRepository {
     }
 
 
-    public function listarTotalPagination(){
-
-        $total = $this->model->all()->count();
-
-        return  $total;
-
-    }
-
     public function listarPagination($startRow, $limit, $sortBy, $orderBy){
 
         //$this->usuario = $this->usuario->where('name','LIKE',"%{$filter}%")->get();
@@ -69,9 +61,16 @@ abstract class AbstractRepository {
             $limit = 10;
         }
 
-        $this->model = $this->model->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+        $query = $this->model;
+        $total = $query->count();
+        $lista = $query->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
 
-        return $this->model;
+        $result = [
+            'total' => $total,
+            'lista' => $lista
+        ];
+
+       return $result;
 
     }
 

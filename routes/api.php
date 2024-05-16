@@ -42,7 +42,6 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 
 // STATUS CONTROLLER
 Route::prefix('status')->middleware('jwt.auth')->group(function() {
-    Route::get('/listar-status-total', [StatusController::class, 'listarTotalPagination']);
     Route::get('/listar-status/{startRow}/{limit}/{sortBy}', [StatusController::class, 'listarPagination']);
     Route::post('/salvar-status', [StatusController::class, 'salvar']);
     Route::post('/excluir-status', [StatusController::class, 'excluir']);
@@ -72,7 +71,6 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
 
     // VIAGEM CONTROLLER
 
-    Route::get('/listar-viagem-total', [ViagemController::class, 'listarTotalPagination']);
     Route::get('/listar-viagem/{startRow}/{limit}/{sortBy}', [ViagemController::class, 'listarPagination']);
     Route::post('/salvar-viagem', [ViagemController::class, 'salvar']);
     Route::post('/excluir-viagem', [ViagemController::class, 'excluir']);
@@ -100,7 +98,6 @@ Route::prefix('despesa')->middleware('jwt.auth')->group(function() {
 Route::prefix('config')->middleware('jwt.auth')->group(function() {
 
     // Categoria
-    Route::get('/listar-categoria-total', [CategoriaController::class, 'listarTotalPagination']);
     Route::get('/listar-categoria/{startRow}/{limit}/{sortBy}', [CategoriaController::class, 'listarPagination']);
     Route::post('/salvar-categoria', [CategoriaController::class, 'salvar']);
     Route::post('/excluir-categoria', [CategoriaController::class, 'excluir']);
@@ -108,18 +105,13 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::get('/listar-categoria', [CategoriaController::class, 'listarCategoria']);
 
     // Metodos de Pagamento
-    Route::get('/listar-metodo-pagamento-total', [MetodoPagamentoController::class, 'listarTotalPagination']);
     Route::get('/listar-metodo-pagamento/{startRow}/{limit}/{sortBy}', [MetodoPagamentoController::class, 'listarPagination']);
     Route::post('/salvar-metodo-pagamento', [MetodoPagamentoController::class, 'salvar']);
     Route::post('/excluir-metodo-pagamento', [MetodoPagamentoController::class, 'excluir']);
     Route::get('/buscar-metodo-pagamento/{id}', [MetodoPagamentoController::class, 'buscarPorId']);
     Route::get('/listar-metodo-pagamento', [MetodoPagamentoController::class, 'listarMetodoPagamento']);
 
-
-
-
     // Reportar BUG
-    Route::get('/listar-reportar-bug-total', [ReportarBugController::class, 'listarTotalPagination']);
     Route::get('/listar-reportar-bug/{startRow}/{limit}/{sortBy}', [ReportarBugController::class, 'listarPagination']);
     Route::post('/salvar-reportar-bug', [ReportarBugController::class, 'salvar']);
     Route::post('/excluir-reportar-bug', [ReportarBugController::class, 'excluir']);

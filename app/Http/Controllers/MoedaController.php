@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Moeda;
 use App\Repositories\MoedaRepository;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class MoedaController extends Controller

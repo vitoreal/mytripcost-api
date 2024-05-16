@@ -221,20 +221,18 @@ class ViagemController extends Controller
                 $lista = $repository->listarPaginationViagem($startRow, $limit, $sortBy, 'id', $user->id);
             }
 
-            foreach ($lista as $key => $value) {
+            foreach ($lista['lista'] as $key => $value) {
 
-                $lista[$key]->orcamento = number_format($value->orcamento,2,",",".");;
-                $lista[$key]->data_inicio = date("d/m/Y", strtotime($value->data_inicio));
-                $lista[$key]->data_fim = date("d/m/Y", strtotime($value->data_fim));
+                $lista['lista'][$key]->orcamento = number_format($value->orcamento,2,",",".");;
+                $lista['lista'][$key]->data_inicio = date("d/m/Y", strtotime($value->data_inicio));
+                $lista['lista'][$key]->data_fim = date("d/m/Y", strtotime($value->data_fim));
 
+                if($lista['lista'][$key]->foto){
 
-
-                if($lista[$key]->foto){
-
-                    $files = Storage::get($lista[$key]->foto);
+                    $files = Storage::get($lista['lista'][$key]->foto);
 
                     $base64 = base64_encode($files);
-                    $lista[$key]->foto = 'data:image/jpeg;base64,'.$base64;
+                    $lista['lista'][$key]->foto = 'data:image/jpeg;base64,'.$base64;
                 }
 
             }
@@ -249,37 +247,6 @@ class ViagemController extends Controller
         }
 
     }
-
-    public function listarTotalPagination(){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repository = new ViagemRepository($this->viagem);
-
-            if($user->isAdmin()) {
-                $total = $repository->listarTotalPagination();
-            } else {
-                $total = $repository->listarTotalPaginationViagem($user->id);
-
-            }
-
-            $retorno = [
-                'total' => $total
-            ];
-
-            return response()->json($retorno, Response::HTTP_OK);
-
-
-        } catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-        }
-
-    }
-
-
 
     /**
      * Metodo para alterar a senha

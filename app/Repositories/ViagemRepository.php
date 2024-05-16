@@ -19,14 +19,6 @@ class ViagemRepository extends AbstractRepository {
         return $total;
     }
 
-    public function listarTotalPaginationViagem($userId){
-
-        $total = $this->model->where([['user_id','=', $userId], ['status', '=', 1]])->count();
-
-        return  $total;
-
-    }
-
     public function listarPaginationViagem($startRow, $limit, $sortBy, $orderBy, $userId){
 
         if($sortBy == ''){
@@ -39,9 +31,18 @@ class ViagemRepository extends AbstractRepository {
             $limit = 10;
         }
 
-        $this->model = $this->model->where([['user_id','=', $userId], ['status', '=', 1]])->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
 
-        return $this->model;
+        $query = $this->model->where([['user_id','=', $userId], ['status', '=', 1]]);
+
+        $total = $query->count();
+        $lista = $query->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+
+        $result = [
+            'total' => $total,
+            'lista' => $lista
+        ];
+
+       return $result;
 
     }
 

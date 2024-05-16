@@ -135,38 +135,6 @@ class StatusController extends Controller
 
     }
 
-    public function listarTotalPagination(){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            if($user->isAdmin()) {
-
-                $statusRepo = new StatusRepository($this->status);
-
-                $total = $statusRepo->listarTotalPagination();
-
-                $retorno = [
-                    'total' => $total
-                ];
-
-                return response()->json($retorno, Response::HTTP_OK);
-            } else {
-
-                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
-                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-            }
-
-        } catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-        }
-
-    }
-
-
-
     /**
      * Metodo para alterar a senha
      *
