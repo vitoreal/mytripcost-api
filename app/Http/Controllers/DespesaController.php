@@ -148,8 +148,16 @@ class DespesaController extends Controller
                 $viagem = $resp[0]->viagem;
 
                 if(($viagem->user_id == $user->id)){
-                    $result = $repository->listarPaginationDespesaViagem($idViagem, $startRow, $limit, $sortBy, 'id');
-                    $retorno = ['lista' => $result ];
+                    $lista = $repository->listarPaginationDespesaViagem($idViagem, $startRow, $limit, $sortBy, 'id');
+
+                    foreach ($lista['lista'] as $key => $value) {
+
+                        $lista['lista'][$key]->valor = number_format($value->valor,2,",",".");;
+                        $lista['lista'][$key]->data_despesa = date("d/m/Y", strtotime($value->data_despesa));
+
+                    }
+
+                    $retorno = ['lista' => $lista ];
                     return response()->json($retorno, Response::HTTP_OK);
                 }
 
@@ -175,7 +183,6 @@ class DespesaController extends Controller
             $repository = new DespesaRepository($this->despesa);
 
             $result = $repository->buscarPorId($id);
-
 
             if($result){
 

@@ -29,7 +29,7 @@ class DespesaRepository extends AbstractRepository {
         $query = $this->model->where('id_viagem', $idViagem);
 
         $total = $query->count();
-        $lista = $query->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
+        $lista = $query->with('categoria')->offset($startRow)->limit($limit)->orderBy($orderBy, $sortBy)->get();
 
         $result = [
             'total' => $total,
