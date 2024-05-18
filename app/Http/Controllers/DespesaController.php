@@ -186,7 +186,7 @@ class DespesaController extends Controller
 
             if($result){
 
-                $viagem = $result[0]->viagem;
+                $viagem = $result->viagem;
 
                 // Verificando se é o proprio usuario da viagem que está buscando a despesa
                 if($viagem->user_id != $user->id){
