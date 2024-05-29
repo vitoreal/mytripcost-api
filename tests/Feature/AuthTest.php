@@ -11,7 +11,7 @@ use \Illuminate\Http\Response;
 use \Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
-class StatusTest extends TestCase
+class AuthTest extends TestCase
 {
 
     use RefreshDatabase;
@@ -25,28 +25,18 @@ class StatusTest extends TestCase
         $this->user = $this->createUser();
     }
 
-    public function test_homepage_contains_empty_table(): void
+    public function test_login()
     {
 
-        // Alterando os dados do usuario
-        //$repository = new StatusRepository($this->status);
-        $credencials = [
-                'email' => $this->user->email,
-                'password' => '1q2w3e4r',
-            ];
-
-        $token = Auth::attempt($credencials);
-
-        $headers = array_merge(
-            ['Authorization' => 'Bearer '.$token],
-        );
-
-        $response = $this->actingAs($this->user, 'api')->getJson('api/status/listar-status/1/10/desc', $headers);
+        $response = $this->post('api/login/', [
+            'email' => $this->user->email,
+            'password' => '1q2w3e4r',
+        ]);
+        //$this->user->roles[0]->name
         $response->assertStatus(Response::HTTP_OK);
+        $this->assertAuthenticatedAs($this->user);
 
-        //$response = $this->actingAs($this->user)->get('status/listar-status/1/10/desc');
-
-    }
+     }
 
     protected function createUser(): User
     {
@@ -56,4 +46,5 @@ class StatusTest extends TestCase
         $user->roles()->attach($role_admin);
         return $user;
     }
+
 }

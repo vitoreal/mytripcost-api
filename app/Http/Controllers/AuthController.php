@@ -13,6 +13,7 @@ use App\Notifications\ResetPasswordNotification;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Throwable;
 
@@ -201,10 +202,10 @@ class AuthController extends Controller
                 ]
             ];
 
-            return response()->json($retorno, 200);
+            return response()->json($retorno, Response::HTTP_OK);
 
         } else {
-            return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível efetuar o login !'], 403);
+            return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível efetuar o login !'], Response::HTTP_FORBIDDEN);
         }
 
     }
