@@ -100,7 +100,7 @@ class StatusController extends Controller
                 'result' => $result
             ];
 
-            return response()->json($retorno, 200);
+            return response()->json($retorno, Response::HTTP_OK);
         } else {
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem acesso a esta funcionalidade!', ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);

@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use \Illuminate\Http\Response;
-use \Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -32,6 +32,14 @@ class AuthTest extends TestCase
             'email' => $this->user->email,
             'password' => '1q2w3e4r',
         ]);
+
+        $credencials = [
+            'email' => $this->user->email,
+            'password' => '1q2w3e4r',
+        ];
+
+        $token = Auth::attempt($credencials);
+
         //$this->user->roles[0]->name
         $response->assertStatus(Response::HTTP_OK);
         $this->assertAuthenticatedAs($this->user);
@@ -40,7 +48,7 @@ class AuthTest extends TestCase
 
     protected function createUser(): User
     {
-        $role_admin = Role::factory()->create(['name' => 'ROOT teste']);
+        $role_admin = Role::factory()->create(['name' => 'ROOT']);
         Status::factory()->create();
         $user = User::factory()->create();
         $user->roles()->attach($role_admin);
