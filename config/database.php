@@ -43,11 +43,11 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
-        'mysql' => [
-            'driver' => 'mysql',
+        'mariadb' => [
+            'driver' => 'mariadb',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '3306'),
+            'port' => env('DB_PORT', '3307'),
             'database' => env('DB_DATABASE', 'mytripcostdb'),
             'username' => env('DB_USERNAME', 'admin'),
             'password' => env('DB_PASSWORD', 'admin'),

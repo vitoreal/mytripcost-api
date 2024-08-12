@@ -138,7 +138,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users',
             'password' => 'required|string|min:6|confirmed',
-            'password_confirmation' => 'required'
+            'password_confirmation' => 'required',
+            'tokenEmail' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -148,10 +149,10 @@ class AuthController extends Controller
         $updatePassword = DB::table('password_reset_tokens')
                             ->where([
                             'email' => $request->email,
-                            'token' => $request->token
+                            'token' => $request->tokenEmail
                             ])
                             ->first();
-
+       
         if(!$updatePassword){
             return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível alterar a senha, favor enviar novamente o email de alteração!'], 422);
         }
