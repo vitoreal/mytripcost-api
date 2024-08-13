@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\RolesEnum;
 use App\Models\Role;
 use App\Models\Status;
 use App\Models\User;
@@ -27,14 +28,14 @@ class StatusTest extends TestCase
     {
         parent::setUp();
 
-        $this->userAdmin = $this->createUser(['name' => 'ROOT']);
+        $this->userAdmin = $this->createUser(['name' => RolesEnum::USER_BASICO]);
         $this->header = $this->createHeaderToken($this->userAdmin);
 
     }
 
     public function test_user_has_permission_buscar_por_id_status(): void
     {
-        $this->userBasico = $this->createUser(['name' => 'BASICO']);
+        $this->userBasico = $this->createUser(['name' => RolesEnum::USER_BASICO]);
         $this->headerBasico = $this->createHeaderToken($this->userBasico);
 
         $response = $this->actingAs($this->userBasico)->getJson('api/status/buscar-status/1', $this->headerBasico);
@@ -49,7 +50,7 @@ class StatusTest extends TestCase
 
     public function test_user_has_permission_pagination_status(): void
     {
-        $this->userBasico = $this->createUser(['name' => 'BASICO']);
+        $this->userBasico = $this->createUser(['name' => RolesEnum::USER_BASICO]);
         $this->headerBasico = $this->createHeaderToken($this->userBasico);
 
         $response = $this->actingAs($this->userBasico)->getJson('api/status/listar-status/1/10/desc', $this->headerBasico);

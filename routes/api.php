@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginAuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\http\Controllers\Auth\RegistrarAuthController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\StatusController;
@@ -27,8 +28,8 @@ use App\Http\Controllers\ViagemController;
 */
 
 // Area de login e registro do site
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/registrar', [AuthController::class, 'registrar'])->name('registrar');
+Route::post('/login', LoginAuthController::class);
+Route::post('/registrar', RegistrarAuthController::class);
 Route::post('/lembrar-senha', [AuthController::class, 'lembrarSenha'])->name('lembrarSenha');
 Route::post('/reset-senha', [AuthController::class, 'resetSenha'])->name('resetSenha');
 Route::post('/refreshToken', [AuthController::class, 'refresh']);

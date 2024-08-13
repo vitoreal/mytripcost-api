@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RolesEnum;
 use App\Models\FotoViagem;
 use Illuminate\Http\Request;
 use App\Models\Viagem;
@@ -89,7 +90,7 @@ class ViagemController extends Controller
 
             // Verificando se é o primeiro registro. Todo primeiro registro de viagem tem que ter status = 1 (ATIVO)
             if($totalRegistro > 0){
-                if($user->roles[0]->name == 'BASICO'){
+                if($user->roles[0]->name == RolesEnum::USER_BASICO){
 
                     // Atualizando todas as viagens do usuario mais antigas para o status = 0 (INATIVA)
                     $listaViagens = $repository->buscarRegistroPorIdUser($user->id);

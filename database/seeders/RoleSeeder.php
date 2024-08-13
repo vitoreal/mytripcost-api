@@ -13,10 +13,10 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $roles = array (
-            ['name' => 'ROOT', 'display_name' => 'Usuário Root', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'],
-            ['name' => 'ADMIN', 'display_name' => 'Usuário Admin', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'],
-            ['name' => 'BASICO', 'display_name' => 'Usuário básico', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'],
-            ['name' => 'AVANCADO', 'display_name' => 'Usuário Avançado', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'],
+            ['name' => 'USER_ROOT', 'display_name' => 'Usuário Root', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'],
+            ['name' => 'USER_ADMIN', 'display_name' => 'Usuário Admin', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'],
+            ['name' => 'USER_BASICO', 'display_name' => 'Usuário básico', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'],
+            ['name' => 'USER_AVANCADO', 'display_name' => 'Usuário Avançado', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'],
           );
 
 

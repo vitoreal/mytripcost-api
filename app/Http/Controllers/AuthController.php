@@ -20,70 +20,7 @@ use Throwable;
 class AuthController extends Controller
 {
 
-    /**
-     * Registrar um novo usuario
-     */
-    public function registrar(Request $request){
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,200',
-            'email' => 'required|string|email|between:2,200',
-            'telefone' => 'required|string|min:14|max:15',
-            'password' => 'required|string|confirmed|min:6',
-            'password_confirmation' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-
-            //return response()->json($validator->errors(), 422);
-            return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível validar os campos!'], 422);
-        }
-
-        $exception =  DB::transaction(function() use ($request) {
-
-            $msgUserExiste = 'Este usuário já está cadastrado!';
-
-            $checkUser = User::where('email', $request->email)->first();
-
-            if($checkUser){
-                $retorno = ['type' => 'ERROR', 'mensagem' => $msgUserExiste];
-                return response()->json($retorno, 422);
-            }
-
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'telefone' => $request->telefone,
-                'password' => bcrypt($request->password),
-                'status_id' => 1,
-            ]);
-
-            $checkRole = Role::where('name', 'USER_PADRAO')->first();
-
-            $roleUser = array(
-                ['role_id' => $checkRole->id, 'user_id' => $user->id],
-            );
-
-            DB::table('role_user')->insert($roleUser);
-
-        });
-
-        if($exception){
-            return response()->json($exception->original, 422);
-        } else {
-
-            return $retorno = [
-                'type' => 'SUCESSO',
-                'mensagem' => 'Cadastro efetuado com sucesso!',
-            ];
-
-            return response()->json($retorno, 200);
-        }
-
-
-    }
-
-
+    
     /**
      * Envia link para o usuario resetar a senha
      */
@@ -166,50 +103,7 @@ class AuthController extends Controller
     }
 
     //
-    public function login(Request $request){
-
-        $credencials = $request->only(['email', 'password']);
-        $credencials['status_id'] = 1;
-
-        $messages = array(
-            'required' => 'O campo :attribute é obrigatório.',
-            'email' => 'O campo :attribute é inválido.',
-        );
-
-        $validator = Validator::make($credencials, [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ], $messages);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        //$token = auth('api')->attempt($credencials);
-        $token = Auth::attempt($credencials);
-
-        if($token){
-
-            $user = Auth::user();
-            $user->roles[0]; // Pegando as roles do usuário
-
-            $retorno = [
-                'type' => 'SUCESSO',
-                'mensagem' => 'Login efetuado com sucesso!',
-                'user' => $user,
-                'authorization' => [
-                    'token' => $token,
-                    'type' => 'Bearer'
-                ]
-            ];
-
-            return response()->json($retorno, Response::HTTP_OK);
-
-        } else {
-            return response()->json(['type' => 'ERROR', 'mensagem' => 'Não foi possível efetuar o login !'], Response::HTTP_FORBIDDEN);
-        }
-
-    }
+    
 
 
     /**
