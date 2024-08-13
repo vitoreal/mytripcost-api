@@ -13,6 +13,12 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -99,24 +105,25 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return mixed
      */
-    public function isAdmin() {
-
+    public function isAdmin()
+    {
+       
         foreach ($this->roles()->get() as $role)
         {
-            if ($role->name == RolesEnum::USER_ROOT || $role->name == RolesEnum::USER_ADMIN)
+            if ($role->name == RolesEnum::USER_ROOT->name || $role->name == RolesEnum::USER_ADMIN->name)
             {
                 return true;
             }
         }
 
-        return false;
+        //return false;
     }
 
     public function isRoot() {
 
         foreach ($this->roles()->get() as $role)
         {
-            if ($role->name == RolesEnum::USER_ROOT)
+            if ($role->name == RolesEnum::USER_ROOT->name)
             {
                 return true;
             }
@@ -129,7 +136,7 @@ class User extends Authenticatable implements JWTSubject
 
         foreach ($this->roles()->get() as $role)
         {
-            if ($role->name == RolesEnum::USER_ROOT || $role->name == RolesEnum::USER_ADMIN || $role->name == RolesEnum::USER_BASICO)
+            if ($role->name == RolesEnum::USER_ROOT->name || $role->name == RolesEnum::USER_ADMIN->name || $role->name == RolesEnum::USER_BASICO->name)
             {
                 return true;
             }
@@ -142,7 +149,7 @@ class User extends Authenticatable implements JWTSubject
 
         foreach ($this->roles()->get() as $role)
         {
-            if ($role->name == RolesEnum::USER_ROOT || $role->name == RolesEnum::USER_ADMIN || $role->name == RolesEnum::USER_AVANCADO)
+            if ($role->name == RolesEnum::USER_ROOT->name || $role->name == RolesEnum::USER_ADMIN->name || $role->name == RolesEnum::USER_AVANCADO->name)
             {
                 return true;
             }

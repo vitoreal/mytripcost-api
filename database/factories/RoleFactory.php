@@ -16,7 +16,7 @@ class RoleFactory extends Factory
      */
     public function definition(): array
     {
-        return ['name' => 'ROOT', 'display_name' => 'Usuário Root', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'];
+        return ['name' => 'USER_ROOT', 'display_name' => 'Usuário Root', 'description' => '', 'created_at' => '2023-06-12 02:55:18', 'updated_at' => '2023-06-12 02:55:18'];
 
     }
 

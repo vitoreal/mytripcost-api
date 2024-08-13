@@ -1,8 +1,16 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\LembrarSenhaAuthController;
 use App\Http\Controllers\Auth\LoginAuthController;
+use App\Http\Controllers\Auth\LogoutAuthController;
+use App\Http\Controllers\Auth\RefreshTokenAuthController;
 use Illuminate\Support\Facades\Route;
 use App\http\Controllers\Auth\RegistrarAuthController;
+use App\Http\Controllers\Auth\ResetSenhaAuthController;
+use App\Http\Controllers\Categoria\ExcluirCategoriaController;
+use App\Http\Controllers\Categoria\ListarPaginationCategoriaController;
+use App\Http\Controllers\Categoria\SalvarCategoriaController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\StatusController;
@@ -30,13 +38,13 @@ use App\Http\Controllers\ViagemController;
 // Area de login e registro do site
 Route::post('/login', LoginAuthController::class);
 Route::post('/registrar', RegistrarAuthController::class);
-Route::post('/lembrar-senha', [AuthController::class, 'lembrarSenha'])->name('lembrarSenha');
-Route::post('/reset-senha', [AuthController::class, 'resetSenha'])->name('resetSenha');
-Route::post('/refreshToken', [AuthController::class, 'refresh']);
+Route::post('/lembrar-senha', LembrarSenhaAuthController::class);
+Route::post('/reset-senha', ResetSenhaAuthController::class);
+Route::post('/refreshToken', RefreshTokenAuthController::class);
 
 
 Route::group(['middleware' => ['jwt.auth']], function() {
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', LogoutAuthController::class);
     Route::post('/me', [AuthController::class, 'me']);
 });
 
@@ -97,9 +105,9 @@ Route::prefix('despesa')->middleware('jwt.auth')->group(function() {
 Route::prefix('config')->middleware('jwt.auth')->group(function() {
 
     // Categoria
-    Route::get('/listar-categoria/{startRow}/{limit}/{sortBy}', [CategoriaController::class, 'listarPagination']);
-    Route::post('/salvar-categoria', [CategoriaController::class, 'salvar']);
-    Route::post('/excluir-categoria', [CategoriaController::class, 'excluir']);
+    Route::get('/listar-categoria/{startRow}/{limit}/{sortBy}', ListarPaginationCategoriaController::class);
+    Route::post('/salvar-categoria', SalvarCategoriaController::class);
+    Route::post('/excluir-categoria', ExcluirCategoriaController::class);
     Route::get('/buscar-categoria/{id}', [CategoriaController::class, 'buscarPorId']);
     Route::get('/listar-categoria', [CategoriaController::class, 'listarCategoria']);
 

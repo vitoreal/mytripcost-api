@@ -48,7 +48,7 @@ class AuthTest extends TestCase
 
     protected function createUser(): User
     {
-        $role_admin = Role::factory()->create(['name' => 'ROOT']);
+        $role_admin = Role::factory()->create(['name' => 'USER_ROOT']);
         Status::factory()->create();
         $user = User::factory()->create();
         $user->roles()->attach($role_admin);

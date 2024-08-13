@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Viagem;
 use App\Repositories\FotoViagemRepository;
 use App\Repositories\ViagemRepository;
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
