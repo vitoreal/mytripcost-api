@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LembrarSenhaAuthController;
 use App\Http\Controllers\Auth\LoginAuthController;
 use App\Http\Controllers\Auth\LogoutAuthController;
@@ -13,7 +12,6 @@ use App\Http\Controllers\Categoria\ListarCategoriaController;
 use App\Http\Controllers\Categoria\ListarPaginationCategoriaController;
 use App\Http\Controllers\Categoria\SalvarCategoriaController;
 use App\Http\Controllers\DespesaController;
-use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\FotosViagemController;
 use App\Http\Controllers\GoogleAuthController;
@@ -22,23 +20,18 @@ use App\Http\Controllers\MetodoPagamento\ExcluirMetodoPagamentoController;
 use App\Http\Controllers\MetodoPagamento\ListarMetodoPagamentoController;
 use App\Http\Controllers\MetodoPagamento\ListarPaginationMetodoPagamentoController;
 use App\Http\Controllers\MetodoPagamento\SalvarMetodoPagamentoController;
-use App\Http\Controllers\MetodoPagamentoController;
 use App\Http\Controllers\MoedaController;
-use App\Http\Controllers\ReportarBugController;
+use App\Http\Controllers\ReportarBug\BuscarReportarBugController;
+use App\Http\Controllers\ReportarBug\ExcluirReportarBugController;
+use App\Http\Controllers\ReportarBug\ListarPaginationReportarBugController;
+use App\Http\Controllers\ReportarBug\SalvarReportarBugController;
+use App\Http\Controllers\Status\BuscarStatusController;
+use App\Http\Controllers\Status\ExcluirStatusController;
+use App\Http\Controllers\Status\ListarPaginationStatusController;
+use App\Http\Controllers\Status\SalvarStatusController;
 use App\Http\Controllers\TipoPrivacidadeController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ViagemController;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 // Area de login e registro do site
 Route::post('/login', LoginAuthController::class);
@@ -47,19 +40,16 @@ Route::post('/lembrar-senha', LembrarSenhaAuthController::class);
 Route::post('/reset-senha', ResetSenhaAuthController::class);
 Route::post('/refreshToken', RefreshTokenAuthController::class);
 
-
 Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post('/logout', LogoutAuthController::class);
-    Route::post('/me', [AuthController::class, 'me']);
 });
-
 
 // STATUS CONTROLLER
 Route::prefix('status')->middleware('jwt.auth')->group(function() {
-    Route::get('/listar-status/{startRow}/{limit}/{sortBy}', [StatusController::class, 'listarPagination']);
-    Route::post('/salvar-status', [StatusController::class, 'salvar']);
-    Route::post('/excluir-status', [StatusController::class, 'excluir']);
-    Route::get('/buscar-status/{id}', [StatusController::class, 'buscarPorId']);
+    Route::get('/listar-status/{startRow}/{limit}/{sortBy}', ListarPaginationStatusController::class);
+    Route::post('/salvar-status', SalvarStatusController::class);
+    Route::post('/excluir-status', ExcluirStatusController::class);
+    Route::get('/buscar-status/{id}', BuscarStatusController::class);
 });
 
 // USUARIO CONTROLLER
@@ -124,10 +114,10 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::get('/listar-metodo-pagamento', ListarMetodoPagamentoController::class);
 
     // Reportar BUG
-    Route::get('/listar-reportar-bug/{startRow}/{limit}/{sortBy}', [ReportarBugController::class, 'listarPagination']);
-    Route::post('/salvar-reportar-bug', [ReportarBugController::class, 'salvar']);
-    Route::post('/excluir-reportar-bug', [ReportarBugController::class, 'excluir']);
-    Route::get('/buscar-reportar-bug/{id}', [ReportarBugController::class, 'buscarPorId']);
+    Route::get('/listar-reportar-bug/{startRow}/{limit}/{sortBy}', ListarPaginationReportarBugController::class);
+    Route::post('/salvar-reportar-bug', SalvarReportarBugController::class);
+    Route::post('/excluir-reportar-bug', ExcluirReportarBugController::class);
+    Route::get('/buscar-reportar-bug/{id}', BuscarReportarBugController::class);
 
     // Moeda
     Route::get('/listar-moeda', [MoedaController::class, 'listarMoeda']);
