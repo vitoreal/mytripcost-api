@@ -1,22 +1,27 @@
 <?php
-
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LembrarSenhaAuthController;
 use App\Http\Controllers\Auth\LoginAuthController;
 use App\Http\Controllers\Auth\LogoutAuthController;
 use App\Http\Controllers\Auth\RefreshTokenAuthController;
-use Illuminate\Support\Facades\Route;
 use App\http\Controllers\Auth\RegistrarAuthController;
 use App\Http\Controllers\Auth\ResetSenhaAuthController;
+use App\Http\Controllers\Categoria\BuscarCategoriaController;
 use App\Http\Controllers\Categoria\ExcluirCategoriaController;
+use App\Http\Controllers\Categoria\ListarCategoriaController;
 use App\Http\Controllers\Categoria\ListarPaginationCategoriaController;
 use App\Http\Controllers\Categoria\SalvarCategoriaController;
-use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\FotosViagemController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\MetodoPagamento\BuscarMetodoPagamentoController;
+use App\Http\Controllers\MetodoPagamento\ExcluirMetodoPagamentoController;
+use App\Http\Controllers\MetodoPagamento\ListarMetodoPagamentoController;
+use App\Http\Controllers\MetodoPagamento\ListarPaginationMetodoPagamentoController;
+use App\Http\Controllers\MetodoPagamento\SalvarMetodoPagamentoController;
 use App\Http\Controllers\MetodoPagamentoController;
 use App\Http\Controllers\MoedaController;
 use App\Http\Controllers\ReportarBugController;
@@ -108,15 +113,15 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::get('/listar-categoria/{startRow}/{limit}/{sortBy}', ListarPaginationCategoriaController::class);
     Route::post('/salvar-categoria', SalvarCategoriaController::class);
     Route::post('/excluir-categoria', ExcluirCategoriaController::class);
-    Route::get('/buscar-categoria/{id}', [CategoriaController::class, 'buscarPorId']);
-    Route::get('/listar-categoria', [CategoriaController::class, 'listarCategoria']);
+    Route::get('/buscar-categoria/{id}', BuscarCategoriaController::class);
+    Route::get('/listar-categoria', ListarCategoriaController::class);
 
     // Metodos de Pagamento
-    Route::get('/listar-metodo-pagamento/{startRow}/{limit}/{sortBy}', [MetodoPagamentoController::class, 'listarPagination']);
-    Route::post('/salvar-metodo-pagamento', [MetodoPagamentoController::class, 'salvar']);
-    Route::post('/excluir-metodo-pagamento', [MetodoPagamentoController::class, 'excluir']);
-    Route::get('/buscar-metodo-pagamento/{id}', [MetodoPagamentoController::class, 'buscarPorId']);
-    Route::get('/listar-metodo-pagamento', [MetodoPagamentoController::class, 'listarMetodoPagamento']);
+    Route::get('/listar-metodo-pagamento/{startRow}/{limit}/{sortBy}', ListarPaginationMetodoPagamentoController::class);
+    Route::post('/salvar-metodo-pagamento', SalvarMetodoPagamentoController::class);
+    Route::post('/excluir-metodo-pagamento', ExcluirMetodoPagamentoController::class);
+    Route::get('/buscar-metodo-pagamento/{id}', BuscarMetodoPagamentoController::class);
+    Route::get('/listar-metodo-pagamento', ListarMetodoPagamentoController::class);
 
     // Reportar BUG
     Route::get('/listar-reportar-bug/{startRow}/{limit}/{sortBy}', [ReportarBugController::class, 'listarPagination']);
