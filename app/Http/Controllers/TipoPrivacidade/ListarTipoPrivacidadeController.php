@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\TipoPrivacidade;
 
+use App\Http\Controllers\Controller;
 use App\Models\TipoPrivacidade;
 use App\Repositories\TipoPrivacidadeRepository;
 use Illuminate\Http\Response;
 
-class TipoPrivacidadeController extends Controller
+class ListarTipoPrivacidadeController extends Controller
 {
     public function __construct(TipoPrivacidade $tipoPrivacidade){
         $this->tipoPrivacidade = $tipoPrivacidade;
     }
 
-    public function listar()
+    public function __invoke()
     {
 
         $repository = new TipoPrivacidadeRepository($this->tipoPrivacidade);

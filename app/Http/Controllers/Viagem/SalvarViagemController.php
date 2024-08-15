@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Viagem;
 
 use App\Enums\RolesEnum;
+use App\Http\Controllers\Controller;
 use App\Models\FotoViagem;
 use Illuminate\Http\Request;
 use App\Models\Viagem;
-use App\Repositories\FotoViagemRepository;
 use App\Repositories\ViagemRepository;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -14,10 +14,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Throwable;
 
-class ViagemController extends Controller
+class SalvarViagemController extends Controller
 {
 
     public function __construct(Viagem $viagem, FotoViagem $fotoViagem, string $diretorio = 'images/foto-viagem/'){
@@ -26,10 +24,7 @@ class ViagemController extends Controller
         $this->diretorio = $diretorio;
     }
 
-    /**
-     * Alterar dados do usuario
-     */
-    public function salvar(Request $request){
+    public function __invoke(Request $request){
 
         try {
 
@@ -174,146 +169,6 @@ class ViagemController extends Controller
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }
-    }
-
-    // Busca por id - somente admin e root tem acesso
-    public function buscarPorId(int $id){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repository = new ViagemRepository($this->viagem);
-
-            if($user->isAdmin()) {
-                $result = $repository->buscarPorId($id);
-            } else {
-                $result = $repository->buscarViagemPorId($id);
-            }
-
-            if($result->foto){
-                $files = Storage::get($result->foto);
-
-                $base64 = base64_encode($files);
-                $result->foto = 'data:image/jpeg;base64,'.$base64;
-            }
-            $retorno = [
-                'result' => $result
-            ];
-
-            return response()->json($retorno, 200);
-
-        }  catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $result ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-        }
-    }
-
-    public function listarPagination( string $startRow, string $limit, string $sortBy){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repository = new ViagemRepository($this->viagem);
-
-            if($user->isAdmin()) {
-                $lista = $repository->listarPagination($startRow, $limit, $sortBy, 'id');
-            } else {
-                $lista = $repository->listarPaginationViagem($startRow, $limit, $sortBy, 'id', $user->id);
-            }
-
-            foreach ($lista['lista'] as $key => $value) {
-
-                $lista['lista'][$key]->orcamento = number_format($value->orcamento,2,",",".");;
-                $lista['lista'][$key]->data_inicio = date("d/m/Y", strtotime($value->data_inicio));
-                $lista['lista'][$key]->data_fim = date("d/m/Y", strtotime($value->data_fim));
-
-                if($lista['lista'][$key]->foto){
-
-                    $files = Storage::get($lista['lista'][$key]->foto);
-
-                    $base64 = base64_encode($files);
-                    $lista['lista'][$key]->foto = 'data:image/jpeg;base64,'.$base64;
-                }
-
-            }
-
-            $retorno = ['lista' => $lista ];
-            return response()->json($retorno, Response::HTTP_OK);
-
-        } catch (UserNotDefinedException | UnauthorizedHttpException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-
-        }
-
-    }
-
-    /**
-     * Metodo para alterar a senha
-     *
-     * @return response()
-     */
-    public function excluir(Request $request)
-    {
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repository = new ViagemRepository($this->viagem);
-
-            $idViagem = $request->id;
-
-            if($user->isAdmin()) {
-                $viagem = $repository->buscarPorId($idViagem);
-            } else {
-                $viagem = $repository->buscarViagemPorUser($user->id, $idViagem);
-
-            }
-
-            if($viagem){
-
-                $repoFotoViagem = new FotoViagemRepository($this->fotoViagem);
-
-                if($viagem->foto != ''){
-
-                    $fotoViagem = $repoFotoViagem->buscarPorIdViagem($idViagem);
-
-                    if($fotoViagem){
-                        foreach ($fotoViagem as $key => $value) {
-
-                            $repoFotoViagem->excluir($value->id);
-                            Storage::delete($value->foto);
-                        }
-                    }
-
-                    Storage::delete($viagem->foto);
-
-                    $diretorio = $this->diretorio.'/'.$user->id;
-
-                    $files = Storage::allFiles($diretorio);
-
-                    if(count($files) == 0){
-                        Storage::deleteDirectory($diretorio);
-                    }
-
-                }
-
-                $repository->excluir($idViagem);
-
-                return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
-
-            }
-
-            return response()->json(['type' => 'ERROR', 'mensagem' => 'Você não tem permissão para deletar esse registro!'], Response::HTTP_BAD_REQUEST);
-
-        }  catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-        }
-
     }
 
 }

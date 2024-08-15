@@ -20,7 +20,7 @@ use App\Http\Controllers\MetodoPagamento\ExcluirMetodoPagamentoController;
 use App\Http\Controllers\MetodoPagamento\ListarMetodoPagamentoController;
 use App\Http\Controllers\MetodoPagamento\ListarPaginationMetodoPagamentoController;
 use App\Http\Controllers\MetodoPagamento\SalvarMetodoPagamentoController;
-use App\Http\Controllers\MoedaController;
+use App\Http\Controllers\Moeda\ListarMoedaController;
 use App\Http\Controllers\ReportarBug\BuscarReportarBugController;
 use App\Http\Controllers\ReportarBug\ExcluirReportarBugController;
 use App\Http\Controllers\ReportarBug\ListarPaginationReportarBugController;
@@ -29,9 +29,12 @@ use App\Http\Controllers\Status\BuscarStatusController;
 use App\Http\Controllers\Status\ExcluirStatusController;
 use App\Http\Controllers\Status\ListarPaginationStatusController;
 use App\Http\Controllers\Status\SalvarStatusController;
-use App\Http\Controllers\TipoPrivacidadeController;
+use App\Http\Controllers\TipoPrivacidade\ListarTipoPrivacidadeController;
 use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\ViagemController;
+use App\Http\Controllers\Viagem\BuscarViagemController;
+use App\Http\Controllers\Viagem\ExcluirViagemController;
+use App\Http\Controllers\Viagem\ListarPaginationViagemController;
+use App\Http\Controllers\Viagem\SalvarViagemController;
 
 // Area de login e registro do site
 Route::post('/login', LoginAuthController::class);
@@ -74,10 +77,10 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
 
     // VIAGEM CONTROLLER
 
-    Route::get('/listar-viagem/{startRow}/{limit}/{sortBy}', [ViagemController::class, 'listarPagination']);
-    Route::post('/salvar-viagem', [ViagemController::class, 'salvar']);
-    Route::post('/excluir-viagem', [ViagemController::class, 'excluir']);
-    Route::get('/buscar-viagem/{id}', [ViagemController::class, 'buscarPorId']);
+    Route::get('/listar-viagem/{startRow}/{limit}/{sortBy}', ListarPaginationViagemController::class);
+    Route::post('/salvar-viagem', SalvarViagemController::class);
+    Route::post('/excluir-viagem', ExcluirViagemController::class);
+    Route::get('/buscar-viagem/{id}', BuscarViagemController::class);
 
     // FOTOS VIAGEM
 
@@ -120,10 +123,10 @@ Route::prefix('config')->middleware('jwt.auth')->group(function() {
     Route::get('/buscar-reportar-bug/{id}', BuscarReportarBugController::class);
 
     // Moeda
-    Route::get('/listar-moeda', [MoedaController::class, 'listarMoeda']);
+    Route::get('/listar-moeda', ListarMoedaController::class);
 
     // Tipo Privacidade
-    Route::get('/listar-tipo-privacidade', [TipoPrivacidadeController::class, 'listar']);
+    Route::get('/listar-tipo-privacidade', ListarTipoPrivacidadeController::class);
 
 });
 

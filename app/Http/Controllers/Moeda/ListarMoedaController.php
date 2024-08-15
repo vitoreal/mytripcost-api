@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Moeda;
 
+use App\Http\Controllers\Controller;
 use App\Models\Moeda;
 use App\Repositories\MoedaRepository;
 use Illuminate\Http\Response;
 
-class MoedaController extends Controller
+class ListarMoedaController extends Controller
 {
     public function __construct(Moeda $moeda){
         $this->moeda = $moeda;
     }
 
-    public function listarMoeda()
+    public function __invoke()
     {
-
         $repository = new MoedaRepository($this->moeda);
 
         $repository->findAll();
