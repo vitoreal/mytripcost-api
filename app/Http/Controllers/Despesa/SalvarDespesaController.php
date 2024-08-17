@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Despesa;
 
 use App\Enums\MetodoPagamentoEnum;
+use App\Http\Controllers\Controller;
 use App\Models\Despesa;
 use App\Models\Viagem;
 use App\Repositories\DespesaRepository;
 use App\Repositories\ViagemRepository;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 
-class DespesaController extends Controller
+class SalvarDespesaController extends Controller
 {
     public function __construct(Despesa $despesa, Viagem $viagem){
         $this->viagem = $viagem;
@@ -22,7 +25,7 @@ class DespesaController extends Controller
     /**
      * Salvar dados
      */
-    public function salvar(Request $request){
+    public function __invoke(Request $request){
 
         try {
 
@@ -131,128 +134,6 @@ class DespesaController extends Controller
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         }
-    }
-
-    public function listarPagination( int $idViagem, string $startRow, string $limit, string $sortBy){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repository = new DespesaRepository($this->despesa);
-
-            $resp = $repository->buscarRegistroPorIdViagem($idViagem);
-
-            if(count($resp) > 0){
-
-                $viagem = $resp[0]->viagem;
-
-                if(($viagem->user_id == $user->id)){
-                    $lista = $repository->listarPaginationDespesaViagem($idViagem, $startRow, $limit, $sortBy, 'id');
-
-                    foreach ($lista['lista'] as $key => $value) {
-
-                        $lista['lista'][$key]->valor = number_format($value->valor,2,",",".");;
-                        $lista['lista'][$key]->data_despesa = date("d/m/Y", strtotime($value->data_despesa));
-
-                    }
-
-                    $retorno = ['lista' => $lista ];
-                    return response()->json($retorno, Response::HTTP_OK);
-                }
-
-            }
-
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-
-        } catch (UserNotDefinedException | UnauthorizedHttpException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-
-        }
-
-    }
-
-    public function buscarPorId(int $id){
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repository = new DespesaRepository($this->despesa);
-
-            $result = $repository->buscarPorId($id);
-
-            if($result){
-
-                $viagem = $result->viagem;
-
-                // Verificando se é o proprio usuario da viagem que está buscando a despesa
-                if($viagem->user_id != $user->id){
-                    $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];
-                    return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-                }
-
-                $retorno = [
-                    'result' => $result
-                ];
-
-                return response()->json($retorno, 200);
-
-            } else {
-                $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];
-                return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-            }
-
-
-
-        }  catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $result ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Metodo para alterar a senha
-     *
-     * @return response()
-     */
-    public function excluir(Request $request)
-    {
-
-        try {
-
-            $user = auth()->userOrFail();
-
-            $repository = new DespesaRepository($this->despesa);
-
-            $idDespesa = $request->id;
-
-            $result = $repository->buscarPorId($idDespesa);
-            $viagem = $result->viagem;
-
-            if($viagem){
-
-                // Verificando se é o proprio usuario da viagem que está cadastrando a despesa
-                if($viagem->user_id != $user->id){
-                    $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage()];
-                    return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-                }
-
-                $repository->excluir($idDespesa);
-
-                return response()->json(['type' => 'SUCESSO', 'mensagem' => 'Registro deletado com sucesso!'], Response::HTTP_OK);
-
-            }
-
-            return response()->json(['type' => 'ERROR', 'mensagem' => 'Você não tem permissão para deletar esse registro!'], Response::HTTP_BAD_REQUEST);
-
-        }  catch (UserNotDefinedException | Throwable $e ) {
-            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!', 'error' => $e->getMessage() ];
-            return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-        }
-
     }
 
 }

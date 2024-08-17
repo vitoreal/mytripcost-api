@@ -11,7 +11,10 @@ use App\Http\Controllers\Categoria\ExcluirCategoriaController;
 use App\Http\Controllers\Categoria\ListarCategoriaController;
 use App\Http\Controllers\Categoria\ListarPaginationCategoriaController;
 use App\Http\Controllers\Categoria\SalvarCategoriaController;
-use App\Http\Controllers\DespesaController;
+use App\Http\Controllers\Despesa\BuscarDespesaController;
+use App\Http\Controllers\Despesa\ExcluirDespesaController;
+use App\Http\Controllers\Despesa\ListarPaginationDespesaController;
+use App\Http\Controllers\Despesa\SalvarDespesaController;
 use App\Http\Controllers\Endereco\ListaCidadeController;
 use App\Http\Controllers\Endereco\ListaEstadoController;
 use App\Http\Controllers\FotosViagemController;
@@ -37,7 +40,6 @@ use App\Http\Controllers\Usuario\BuscarMeusDadosUsuarioController;
 use App\Http\Controllers\Usuario\BuscarUsuarioController;
 use App\Http\Controllers\Usuario\ExcluirUsuarioController;
 use App\Http\Controllers\Usuario\ListarPaginationUsuarioController;
-use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\Viagem\BuscarViagemController;
 use App\Http\Controllers\Viagem\ExcluirViagemController;
 use App\Http\Controllers\Viagem\ListarPaginationViagemController;
@@ -99,10 +101,10 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
 
 // VIAGEM CONTROLLER
 Route::prefix('despesa')->middleware('jwt.auth')->group(function() {
-    Route::get('/listar-despesa/{idViagem}/{startRow}/{limit}/{sortBy}', [DespesaController::class, 'listarPagination']);
-    Route::post('/salvar-despesa', [DespesaController::class, 'salvar']);
-    Route::post('/excluir-despesa', [DespesaController::class, 'excluir']);
-    Route::get('/buscar-despesa/{id}', [DespesaController::class, 'buscarPorId']);
+    Route::get('/listar-despesa/{idViagem}/{startRow}/{limit}/{sortBy}', ListarPaginationDespesaController::class);
+    Route::post('/salvar-despesa', SalvarDespesaController::class);
+    Route::post('/excluir-despesa', ExcluirDespesaController::class);
+    Route::get('/buscar-despesa/{id}', BuscarDespesaController::class);
 });
 
 
