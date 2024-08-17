@@ -12,7 +12,8 @@ use App\Http\Controllers\Categoria\ListarCategoriaController;
 use App\Http\Controllers\Categoria\ListarPaginationCategoriaController;
 use App\Http\Controllers\Categoria\SalvarCategoriaController;
 use App\Http\Controllers\DespesaController;
-use App\Http\Controllers\EnderecoController;
+use App\Http\Controllers\Endereco\ListaCidadeController;
+use App\Http\Controllers\Endereco\ListaEstadoController;
 use App\Http\Controllers\FotosViagemController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MetodoPagamento\BuscarMetodoPagamentoController;
@@ -30,6 +31,12 @@ use App\Http\Controllers\Status\ExcluirStatusController;
 use App\Http\Controllers\Status\ListarPaginationStatusController;
 use App\Http\Controllers\Status\SalvarStatusController;
 use App\Http\Controllers\TipoPrivacidade\ListarTipoPrivacidadeController;
+use App\Http\Controllers\Usuario\AlterarSenhaUsuarioController;
+use App\Http\Controllers\Usuario\AlterarUsuarioController;
+use App\Http\Controllers\Usuario\BuscarMeusDadosUsuarioController;
+use App\Http\Controllers\Usuario\BuscarUsuarioController;
+use App\Http\Controllers\Usuario\ExcluirUsuarioController;
+use App\Http\Controllers\Usuario\ListarPaginationUsuarioController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\Viagem\BuscarViagemController;
 use App\Http\Controllers\Viagem\ExcluirViagemController;
@@ -57,18 +64,18 @@ Route::prefix('status')->middleware('jwt.auth')->group(function() {
 
 // USUARIO CONTROLLER
 Route::prefix('usuario')->middleware('jwt.auth')->group(function() {
-    Route::get('/buscar-meus-dados', [UsuarioController::class, 'buscarMeusDados']);
-    Route::post('/alterar-meus-dados', [UsuarioController::class, 'alterarDados']);
-    Route::get('/buscar-dados-usuario/{idUser}', [UsuarioController::class, 'buscarUsuario']);
-    Route::post('/alterar-senha', [UsuarioController::class, 'alterarSenha']);
-    Route::get('/listar-usuario/{startRow}/{limit}/{sortBy}', [UsuarioController::class, 'listarPagination']);
-    Route::post('/excluir-usuario', [UsuarioController::class, 'excluir']);
+    Route::get('/buscar-meus-dados', BuscarMeusDadosUsuarioController::class);
+    Route::post('/alterar-meus-dados', AlterarUsuarioController::class);
+    Route::get('/buscar-dados-usuario/{idUser}', BuscarUsuarioController::class);
+    Route::post('/alterar-senha', AlterarSenhaUsuarioController::class);
+    Route::get('/listar-usuario/{startRow}/{limit}/{sortBy}', ListarPaginationUsuarioController::class);
+    Route::post('/excluir-usuario', ExcluirUsuarioController::class);
 });
 
 // Endereco controller
 Route::prefix('endereco')->middleware('jwt.auth')->group(function() {
-    Route::get('/lista-estado', [EnderecoController::class, 'listaEstado']);
-    Route::get('/lista-cidade/{idEstado}', [EnderecoController::class, 'listaCidade']);
+    Route::get('/lista-estado', ListaEstadoController::class);
+    Route::get('/lista-cidade/{idEstado}', ListaCidadeController::class);
 });
 
 // VIAGEM CONTROLLER | FOTOS VIAGEM CONTROLLER

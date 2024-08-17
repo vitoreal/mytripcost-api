@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('foto', 200)->nullable();
             $table->boolean('status');
             $table->foreignId('id_moeda')->references('id')->on('moeda');
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('id_tipo_privacidade')->references('id')->on('tipo_privacidade');
             $table->timestamps();
         });
