@@ -5,18 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Illuminate\Database\QueryException;
-use App\Notifications\ResetPasswordNotification;
-use App\Models\Role;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Http\Response;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
-use Throwable;
 
 class ResetSenhaAuthController extends Controller
 {

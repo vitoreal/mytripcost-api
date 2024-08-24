@@ -11,13 +11,16 @@ use App\Http\Controllers\Categoria\ExcluirCategoriaController;
 use App\Http\Controllers\Categoria\ListarCategoriaController;
 use App\Http\Controllers\Categoria\ListarPaginationCategoriaController;
 use App\Http\Controllers\Categoria\SalvarCategoriaController;
+use App\Http\Controllers\Contato\EnviarEmailContatoController;
 use App\Http\Controllers\Despesa\BuscarDespesaController;
 use App\Http\Controllers\Despesa\ExcluirDespesaController;
 use App\Http\Controllers\Despesa\ListarPaginationDespesaController;
 use App\Http\Controllers\Despesa\SalvarDespesaController;
 use App\Http\Controllers\Endereco\ListaCidadeController;
 use App\Http\Controllers\Endereco\ListaEstadoController;
-use App\Http\Controllers\FotosViagemController;
+use App\Http\Controllers\FotosViagem\ExcluirFotosViagemController;
+use App\Http\Controllers\FotosViagem\ListarPaginationFotosViagemController;
+use App\Http\Controllers\FotosViagem\SalvarFotosViagemController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MetodoPagamento\BuscarMetodoPagamentoController;
 use App\Http\Controllers\MetodoPagamento\ExcluirMetodoPagamentoController;
@@ -51,6 +54,7 @@ Route::post('/registrar', RegistrarAuthController::class);
 Route::post('/lembrar-senha', LembrarSenhaAuthController::class);
 Route::post('/reset-senha', ResetSenhaAuthController::class);
 Route::post('/refreshToken', RefreshTokenAuthController::class);
+Route::post('/contato/enviar-email', EnviarEmailContatoController::class);
 
 Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post('/logout', LogoutAuthController::class);
@@ -93,10 +97,11 @@ Route::prefix('viagem')->middleware('jwt.auth')->group(function() {
 
     // FOTOS VIAGEM
 
-    Route::post('/salvar-foto-viagem', [FotosViagemController::class, 'salvar']);
-    Route::post('/excluir-foto-viagem', [FotosViagemController::class, 'excluir']);
-    Route::get('/foto-viagem/{id}', [FotosViagemController::class, 'listar']);
-    Route::get('/listar-foto-viagem/{idFoto}/{startRow}/{limit}/{sortBy}', [FotosViagemController::class, 'listarPagination']);
+    Route::post('/salvar-foto-viagem', SalvarFotosViagemController::class);
+    Route::post('/excluir-foto-viagem', ExcluirFotosViagemController::class);
+   // Route::get('/foto-viagem/{id}', [FotosViagemController::class, 'listar']);
+    Route::get('/listar-foto-viagem/{idFoto}/{startRow}/{limit}/{sortBy}', ListarPaginationFotosViagemController::class);
+    
 });
 
 // VIAGEM CONTROLLER

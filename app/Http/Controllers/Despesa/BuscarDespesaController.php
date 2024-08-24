@@ -41,7 +41,7 @@ class BuscarDespesaController extends Controller
                     'result' => $result
                 ];
 
-                return response()->json($retorno, 200);
+                return response()->json($retorno, Response::HTTP_OK);
 
             } else {
                 $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!'];

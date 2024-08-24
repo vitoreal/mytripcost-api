@@ -1,58 +1,51 @@
 <?php
 
-namespace App\Http\Controllers\Despesa;
+namespace App\Http\Controllers\FotosViagem;
 
 use App\Http\Controllers\Controller;
-use App\Models\Despesa;
+use App\Models\FotoViagem;
 use App\Models\Viagem;
-use App\Repositories\DespesaRepository;
+use App\Repositories\FotoViagemRepository;
 use App\Repositories\ViagemRepository;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 
-class ListarPaginationDespesaController extends Controller
+class ListarPaginationFotosViagemController extends Controller
 {
-
-    public function __construct(Despesa $despesa, Viagem $viagem){
+    public function __construct(Viagem $viagem, FotoViagem $fotoViagem, string $diretorio = 'images/foto-viagem/'){
         $this->viagem = $viagem;
-        $this->despesa = $despesa;
+        $this->fotoViagem = $fotoViagem;
+        $this->diretorio = $diretorio;
     }
 
-    
     public function __invoke( int $idViagem, string $startRow, string $limit, string $sortBy){
 
         try {
 
             $user = auth()->userOrFail();
 
-            $repository = new DespesaRepository($this->despesa);
             $repoViagem = new ViagemRepository($this->viagem);
-
-            // Verificar se a viagem em questao eh a do usuario
             $viagem = $repoViagem->buscarPorId($idViagem);
 
-            if($viagem->user_id == $user->id){
-                $lista = $repository->listarPaginationDespesaViagem($idViagem, $startRow, $limit, $sortBy, 'id');
+            $repository = new FotoViagemRepository($this->fotoViagem);
+
+            if(($viagem->user_id == $user->id) || $user->isAdmin()){
+                $lista = $repository->listarPaginationFotoViagem($idViagem, $startRow, $limit, $sortBy, 'id');
 
                 foreach ($lista['lista'] as $key => $value) {
-
-                    $lista['lista'][$key]->valor = number_format($value->valor,2,",",".");;
-                    $lista['lista'][$key]->data_despesa = date("d/m/Y", strtotime($value->data_despesa));
-
+                        $file = Storage::get($value->foto);
+                        $base64 = base64_encode($file);
+                        $lista['lista'][$key]->foto = 'data:'.$value->mimetype.';base64,'.$base64;
                 }
 
                 $retorno = ['lista' => $lista ];
                 return response()->json($retorno, Response::HTTP_OK);
             }
 
-            $result = [
-                'total' => 0,
-                'lista' => array()
-            ];
-
-            $retorno = [ 'lista' => $result, 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
+            $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Você não tem permissão para essa ação!'];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
 
         } catch (UserNotDefinedException | UnauthorizedHttpException | Throwable $e ) {
