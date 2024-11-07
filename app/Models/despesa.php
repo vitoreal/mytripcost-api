@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Despesa extends Model
 {
@@ -32,7 +30,7 @@ class Despesa extends Model
     /**
      * Get the user that owns the phone.
      */
-    public function viagem(): BelongsTo
+    public function viagem()
     {
         return $this->belongsTo(Viagem::class, 'id_viagem', 'id');
     }
@@ -41,7 +39,7 @@ class Despesa extends Model
     /**
      * Get the categoria associated with the despesa.
      */
-    public function categoria(): BelongsTo
+    public function categoria()
     {
         return $this->belongsTo(Categoria::class, 'id_categoria', 'id');
     }
