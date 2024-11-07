@@ -31,4 +31,4 @@ jobs:
                 password: ${{ secrets.FTP_PASSWORD }}
                 server-dir: ${{vars.REMOTE_TARGET_HML}}
             - name: Install Composer dependencies
-              run: composer install --prefer-dist --no-interaction --no-suggest
+              run: composer install --prefer-dist --no-interaction
