@@ -1,4 +1,4 @@
-name: mytripcost.api deployment
+name: html.mytripcost.api deployment
 
 on:
     push:
