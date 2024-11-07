@@ -19,7 +19,7 @@ jobs:
         runs-on: ubuntu-latest
         environment:
             name: production
-            url: 'app.mytripcost.com.br'
+            url: 'api.mytripcost.com.br'
         steps:
             - name: Repo checkout
               uses: actions/checkout@v2
