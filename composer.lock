@@ -21,7 +21,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                 "php": "^8.2"
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.2",
@@ -81,7 +81,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                 "php": "^8.2"
             },
             "conflict": {
                 "doctrine/dbal": "<4.0.0 || >=5.0.0"
@@ -316,7 +316,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                 "php": "^8.2"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12",
@@ -1453,7 +1453,7 @@
             "require": {
                 "composer-runtime-api": "^2.2",
                 "ext-mbstring": "*",
-                "php": "^8.1",
+                 "php": "^8.2",
                 "symfony/console": "^6.2|^7.0"
             },
             "conflict": {
@@ -2468,7 +2468,7 @@
             "require": {
                 "carbonphp/carbon-doctrine-types": "<100.0",
                 "ext-json": "*",
-                "php": "^8.1",
+                 "php": "^8.2",
                 "psr/clock": "^1.0",
                 "symfony/clock": "^6.3 || ^7.0",
                 "symfony/polyfill-mbstring": "^1.0",
@@ -2990,7 +2990,7 @@
                 "lcobucci/jwt": "^5.0",
                 "namshi/jose": "^7.0",
                 "nesbot/carbon": "^2.0|^3.0",
-                "php": "^8.1"
+                 "php": "^8.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3",
@@ -3793,7 +3793,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                 "php": "^8.2"
             },
             "require-dev": {
                 "captainhook/plugin-composer": "^5.3",
@@ -8854,7 +8854,7 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "illuminate/support": "^10.0|^11.0",
-                "php": "^8.1",
+                 "php": "^8.2",
                 "spatie/ignition": "^1.15",
                 "symfony/console": "^6.2.3|^7.0",
                 "symfony/var-dumper": "^6.2.3|^7.0"
