@@ -27,20 +27,5 @@ class Despesa extends Model
         'outros_metodo_pagamento'
     ];
 
-    /**
-     * Get the user that owns the phone.
-     */
-    public function viagem()
-    {
-        return $this->belongsTo(Viagem::class, 'id_viagem', 'id');
-    }
-
-
-    /**
-     * Get the categoria associated with the despesa.
-     */
-    public function categoria()
-    {
-        return $this->belongsTo(Categoria::class, 'id_categoria', 'id');
-    }
+   
 }
