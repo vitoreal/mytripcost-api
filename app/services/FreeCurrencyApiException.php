@@ -1,6 +1,6 @@
 <?php
 
-namespace App\FreeCurrencyApi;
+namespace App\Services;
 
 use Exception;
 
