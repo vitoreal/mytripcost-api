@@ -1,6 +1,6 @@
 <?php
 
-namespace FreeCurrencyApi\FreeCurrencyApi;
+namespace App\FreeCurrencyApi;
 
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
