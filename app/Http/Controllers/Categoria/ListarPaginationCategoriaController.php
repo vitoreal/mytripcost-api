@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Categoria;
 use App\Http\Controllers\Controller;
 use App\Models\Categoria;
 use App\Repositories\CategoriaRepository;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Response;
+use PDOException;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\UserNotDefinedException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
@@ -38,10 +41,9 @@ class ListarPaginationCategoriaController extends Controller
                 return response()->json($retorno, Response::HTTP_BAD_REQUEST);
             }
 
-        } catch (UserNotDefinedException | UnauthorizedHttpException | Throwable $e ) {
+        } catch (UserNotDefinedException | UnauthorizedHttpException | PDOException | QueryException | Throwable | Exception $e ) {
             $retorno = [ 'type' => 'ERROR', 'mensagem' => 'Não foi possível realizar a sua solicitação!' ];
             return response()->json($retorno, Response::HTTP_BAD_REQUEST);
-
         }
 
     }
