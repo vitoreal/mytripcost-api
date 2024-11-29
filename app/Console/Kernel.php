@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use FreeCurrencyApi\FreeCurrencyApi\FreeCurrencyApiClient;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,19 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(function () {
 
-            $currencyapi = new FreeCurrencyApiClient();
-            $response = $currencyapi->call();
-
-            print_r($response);
-
-            if($response){
-
-            }
-
-       // })->twiceDailyAt(7, 16, 15);
-        })->everyMinute();
     }
 
     /**

@@ -1,9 +1,10 @@
-FROM php:8.1.1-fpm as php
+FROM php:8.3.10-fpm as php
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
+    vim \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -18,6 +19,12 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
+RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
+RUN docker-php-ext-install gd
+
+# Configurar PHP para permitir uploads de até 10M
+RUN echo "upload_max_filesize = 10M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 10M" >> /usr/local/etc/php/conf.d/uploads.ini
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -30,15 +37,3 @@ COPY . .
 
 ENV PORT=8000
 ENTRYPOINT [ "docker/entrypoint.sh" ]
-
-# ==============================================================================
-#  node
-FROM node:18-alpine as node
-
-WORKDIR /var/www
-COPY . .
-
-RUN npm install --global cross-env
-RUN npm install
-
-VOLUME /var/www/node_modules
