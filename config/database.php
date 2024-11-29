@@ -42,12 +42,11 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
-
-        'mariadb' => [
-            'driver' => 'mariadb',
+        'mysql' => [
+            'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '3307'),
+            'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'mytripcostdb'),
             'username' => env('DB_USERNAME', 'admin'),
             'password' => env('DB_PASSWORD', 'admin'),
