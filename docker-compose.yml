@@ -3,6 +3,7 @@ services:
     php:
         build:
             context: .
+            dockerfile: Dockerfile
             target: php
             args:
                 - APP_ENV=${APP_ENV}
@@ -15,14 +16,14 @@ services:
         ports:
             - 8000:8000
         depends_on:
-            - mariadb
-            - redis
+            - mysql
         networks:
             - mytripcost-net
 
-    # db mariadb
-    mariadb:
-        image: mariadb:11.3
+    # db mysql
+    mysql:
+        #image: mariadb:11.3
+        image: mysql
         #restart: unless-stopped
         env_file:
             - .env
@@ -31,23 +32,13 @@ services:
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
             MYSQL_PASSWORD: ${DB_PASSWORD}
             MYSQL_USER: ${DB_USERNAME}
-            MYSQL_TCP_PORT: 3307
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+            SERVICE_NAME: mysql
         volumes:
-            - mariadb-data:/var/lib/mysql
+            - ./.docker/mysql/data:/var/lib/mysql
         ports:
-            - "3307:3307"
+            - ${DB_PORT}:${DB_PORT}
         command:
             --max_allowed_packet=32505856
-        networks:
-            - mytripcost-net      
-
-    # Redis Server
-    redis:
-        image: redis:alpine
-        command: redis-server --appendonly yes --requirepass  "${REDIS_PASSWORD}"
-        ports:
-            - 6379:6379
         networks:
             - mytripcost-net
 
@@ -82,9 +73,8 @@ services:
 
 networks:
     mytripcost-net:
-        name: mytripcost-net
         driver: bridge
 
 volumes:
-    mariadb-data:
-    mailpit-data:    
+    mysql-data:
+    mailpit-data:
